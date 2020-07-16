@@ -16,6 +16,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.ShapedCraftingContainer;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer> implements IContainerListener {
@@ -63,9 +64,9 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         this.confirmBtn = new Button(this.guiLeft + 90, this.height / 2 - 23, 70, 20, addRecipe.getString(), (button) -> {
 
         });
-        this.confirmBtn.active = false;
+        this.confirmBtn.active = true;
         this.addButton(confirmBtn);
-
+//        this.children.add(confirmBtn);
         super.init();
     }
 
@@ -76,17 +77,26 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         //渲染组件
         this.recipeNameInput.render(mouseX, mouseY, particleTick);
 
+//        this.confirmBtn.render(mouseX,mouseY,particleTick);
+
+        //Tooltip
+        this.renderHoveredToolTip(mouseX, mouseY);
+        this.confirmBtn.renderToolTip(mouseX,mouseY);
 
 
-        //按钮Tooltip
         ArrayList<String> confirmBtnToolTips = new ArrayList<>();
-        confirmBtnToolTips.add("请输入正确的配方");
+        confirmBtnToolTips.add("添加至数据包");
         if (this.confirmBtn.isHovered()){
             if(this.confirmBtn.active){
-                renderTooltip(confirmBtnToolTips,mouseX,mouseY);
+                this.renderTooltip(confirmBtnToolTips,mouseX,mouseY);
             }
         }
 
+
+    }
+
+    public void tick() {
+        super.tick();
 
     }
 
@@ -111,8 +121,10 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
     private void inputResponder(String inputText) {
         if (inputText.isEmpty()) {
             this.recipeNameIsEmpty = true;
+            this.confirmBtn.active = false;
         }else {
             this.recipeNameIsEmpty = false;
+            this.confirmBtn.active = true;
         }
     }
 
