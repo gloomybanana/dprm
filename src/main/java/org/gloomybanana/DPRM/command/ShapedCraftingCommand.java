@@ -12,12 +12,12 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.gloomybanana.DPRM.container.InvContainer;
+import org.gloomybanana.DPRM.container.ShapedCraftingContainer;
 
 import javax.annotation.Nullable;
 
-public class InvContainerCommand implements Command<CommandSource> {
-    public static InvContainerCommand instance = new InvContainerCommand();
+public class ShapedCraftingCommand implements Command<CommandSource> {
+    public static ShapedCraftingCommand instance = new ShapedCraftingCommand();
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
@@ -32,7 +32,7 @@ public class InvContainerCommand implements Command<CommandSource> {
             @Nullable
             @Override
             public Container createMenu(int sycID, PlayerInventory playerInventory, PlayerEntity player) {
-                return new InvContainer(sycID, playerInventory);
+                return new ShapedCraftingContainer(sycID, playerInventory);
             }
         });
         return 0;

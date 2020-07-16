@@ -22,6 +22,7 @@ public class DPRM {
         Registry.CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
     public void setup(final FMLCommonSetupEvent event){
+
     }
 
 }

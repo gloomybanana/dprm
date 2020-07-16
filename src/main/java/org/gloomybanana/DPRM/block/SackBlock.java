@@ -6,7 +6,7 @@ import net.minecraft.block.material.Material;
 
 public class SackBlock extends Block{
     public SackBlock() {
-        super(Block.Properties
+        super(Properties
                 .create(Material.WOOD)
                 .hardnessAndResistance(0.5F)
                 .sound(SoundType.CLOTH));

@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 
 public class RockBlock extends Block {
     public RockBlock(){
-        super(Block.Properties
+        super(Properties
                 .create(Material.ROCK)
                 .hardnessAndResistance(5));
     }

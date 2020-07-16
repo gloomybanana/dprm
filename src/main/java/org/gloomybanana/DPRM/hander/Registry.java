@@ -11,7 +11,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.block.RockBlock;
-import org.gloomybanana.DPRM.container.InvContainer;
+import org.gloomybanana.DPRM.container.ShapedCraftingContainer;
+import org.gloomybanana.DPRM.container.ShapelessCraftingContainer;
 import org.gloomybanana.DPRM.item.ItemInMaterials;
 
 public class Registry {
@@ -29,6 +30,8 @@ public class Registry {
         return new BlockItem(Registry.demoBlock1.get(), new Item.Properties().group(ItemGroup.MATERIALS));});
 
     //Container
-    public static RegistryObject<ContainerType<InvContainer>> invContainer = CONTAINERS.register("InvContainer", () -> IForgeContainerType.create((windowId, playerInventory, data) -> new InvContainer(windowId,playerInventory)));
+    public static RegistryObject<ContainerType<ShapedCraftingContainer>> shapedCraftingContainer = CONTAINERS.register("crafting_container", () -> IForgeContainerType.create((windowId, playerInventory, data) -> new ShapedCraftingContainer(windowId,playerInventory)));
+    public static RegistryObject<ContainerType<ShapelessCraftingContainer>> shapelessCraftingContainer = CONTAINERS.register("shapeless_crafting_container", () -> IForgeContainerType.create((windowId, playerInventory, data) -> new ShapelessCraftingContainer(windowId,playerInventory)));
+
 
 }
