@@ -100,6 +100,12 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
 
     }
 
+    public void removed() {
+        super.removed();
+        this.minecraft.keyboardListener.enableRepeatEvents(false);
+        this.container.removeListener(this);
+    }
+
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         this.renderBackground();
