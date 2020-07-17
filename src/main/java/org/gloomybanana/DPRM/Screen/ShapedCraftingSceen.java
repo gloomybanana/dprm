@@ -4,10 +4,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -15,9 +18,12 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.ShapedCraftingContainer;
+import org.gloomybanana.DPRM.file.FileManager;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer> implements IContainerListener {
     //Screen背景材质
@@ -33,6 +39,8 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
     TextFieldWidget recipeNameInput;//文本域
     Button confirmBtn;//按钮
 
+    private ShapedCraftingContainer shapedCraftingContainer;
+
     //boolean
     boolean recipeNameIsEmpty = true;
     public ShapedCraftingSceen(ShapedCraftingContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
@@ -40,6 +48,8 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         //设置ContainerScreen的尺寸
         this.xSize = 176;
         this.ySize = 166;
+        this.shapedCraftingContainer = screenContainer;
+
     }
 
     @Override
@@ -63,10 +73,18 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         //添加按钮
         this.confirmBtn = new Button(this.guiLeft + 90, this.height / 2 - 23, 70, 20, addRecipe.getString(), (button) -> {
 
+            try {
+                FileManager.createShapedCraftingRecipe(shapedCraftingContainer.inventorySlots,recipeNameInput.getText(),"demo", (ServerPlayerEntity) playerInventory.player);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.onClose();
         });
         this.confirmBtn.active = true;
         this.addButton(confirmBtn);
 //        this.children.add(confirmBtn);
+
+
         super.init();
     }
 
@@ -77,12 +95,8 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         //渲染组件
         this.recipeNameInput.render(mouseX, mouseY, particleTick);
 
-//        this.confirmBtn.render(mouseX,mouseY,particleTick);
-
-        //Tooltip
+        //Tooltips
         this.renderHoveredToolTip(mouseX, mouseY);
-        this.confirmBtn.renderToolTip(mouseX,mouseY);
-
 
         ArrayList<String> confirmBtnToolTips = new ArrayList<>();
         confirmBtnToolTips.add("添加至数据包");
@@ -104,6 +118,13 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         super.removed();
         this.minecraft.keyboardListener.enableRepeatEvents(false);
         this.container.removeListener(this);
+    }
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+        if (p_keyPressed_1_ == 256) {
+            this.minecraft.player.closeScreen();
+        }
+
+        return !this.recipeNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) && !this.recipeNameInput.canWrite() ? super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) : true;
     }
 
     @Override
