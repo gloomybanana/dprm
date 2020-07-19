@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import org.gloomybanana.DPRM.file.FileManager;
+import org.gloomybanana.DPRM.file.JsonManager;
 
 import java.io.IOException;
 
@@ -15,12 +15,12 @@ public class MenuScreenCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
-
-        try {
-            FileManager.createMinecraftDatapackRecipesDir(player);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//
+//        try {
+//            JsonManager.createMinecraftDatapackRecipesDir(player);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return 0;
     }
 

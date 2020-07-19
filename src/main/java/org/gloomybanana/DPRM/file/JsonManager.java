@@ -6,23 +6,33 @@ import net.minecraft.item.ItemStack;
 
 import java.io.*;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class FileManager {
+public class JsonManager {
     /**
      * 创建数据包
-     * @param player 创建者的玩家ID
+     * @param recipeDirPath 配方路径
      * @return 原版数据包recipes路径
      * @throws IOException 异常
      */
-    public static File createMinecraftDatapackRecipesDir(ServerPlayerEntity player) throws IOException {
-        String datapackName = "add_by_" + player.getName().getFormattedText();
-        File worldDir = player.getServerWorld().getSaveHandler().getWorldDirectory();
-        File datapackDir = new File(worldDir.getPath() + "\\datapacks\\" + datapackName + "\\data\\minecraft\\recipes");
-        File pack_mcmeta = new File(worldDir.getPath() + "\\datapacks\\" + datapackName + "\\pack.mcmeta");
+    public static File createMinecraftDatapackRecipesDir(String recipeDirPath) throws IOException {
 
+        System.out.println("recipeDirPath:" + recipeDirPath);
+        File recipeDir = new File(recipeDirPath);
 
-        if (!datapackDir.exists()) {
-            boolean mkdir = datapackDir.mkdirs();
+        //  .\saves\New World\datapacks\add_by_Dev\data\minecraft\recipes
+//        Pattern p = Pattern.compile("datapacks\\\\(.*?)\\\\data");
+//        String datapackName = p.matcher(recipeDirPath).group(1);
+//        System.out.println(datapackName);
+
+        if (!recipeDir.exists()) {
+            boolean mkdir = recipeDir.mkdirs();
+
+            String pack_mcmetaPath = recipeDir.getParentFile().getParentFile().getParentFile().getPath();
+            File pack_mcmeta = new File(pack_mcmetaPath + "\\pack.mcmeta");
+            System.out.println("pack_mcmeta:"+pack_mcmetaPath);
+
             if (mkdir) {
                 OutputStream outputStream = new FileOutputStream(pack_mcmeta);
                 OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8");
@@ -30,13 +40,13 @@ public class FileManager {
                         "    \"pack\": {\n" +
                         "        \"description\": \"dprm resources\",\n" +
                         "        \"pack_format\": 5,\n" +
-                        "        \"_comment\": \"add by " + player.getName().getFormattedText() + ".\"\n" +
+                        "        \"_comment\": \" " + "add by datapack recipe maker" + ".\"\n" +
                         "    }\n" +
                         "}\n");
                 writer.close();
                 outputStream.close();
-                System.out.println("datapack \""+datapackName+"\" generate success!");
-                return datapackDir;
+                System.out.println("datapack \""+"datapackName"+"\" generate success!");
+                return recipeDir.getParentFile().getParentFile().getParentFile();
             }
         }
         return null;
@@ -47,20 +57,16 @@ public class FileManager {
      * @param slots 有序合成Container插槽
      * @param recipeName recipe名称
      * @param groupName group名称
-     * @param player 玩家
+     * @param recipeDirPath 配方路径
      * @return 数据包名称
      * @throws IOException 异常
      */
-    public static String createShapedCraftingRecipe(List<Slot> slots,String recipeName,String groupName,ServerPlayerEntity player) throws IOException {
+    public static String createShapedCraftingRecipe(Slot[] slots,String recipeName,String groupName,String recipeDirPath) throws IOException {
 
-        File datapackRecipesDir = createMinecraftDatapackRecipesDir(player);
-        Slot resultSlot = null;
-        for (Slot slot : slots) {
-            if (slot.getSlotIndex()==0) resultSlot = slot;
-        }
+        File datapackRecipesDir = createMinecraftDatapackRecipesDir(recipeDirPath);
 
 
-        File recipeJson = new File(datapackRecipesDir + "//" + recipeName + ".json");
+        File recipeJson = new File(recipeDirPath + "//" + recipeName + ".json");
         OutputStream outputStream = new FileOutputStream(recipeJson);
         OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8");
         writer.append("{\n" +
@@ -73,14 +79,14 @@ public class FileManager {
                         JsonUtil.getJsonKey(slots) +
                 "    },\n" +
                 "    \"result\": {\n" +
-                        JsonUtil.getJsonCraftingResult(resultSlot.getStack()) +
+                        JsonUtil.getJsonCraftingResult(slots[0].getStack()) +
                 "    }\n" +
                 "}");
         writer.close();
         outputStream.close();
-        System.out.println("datapack \""+recipeName+"\" generate success!");
+        System.out.println("recipe \""+recipeJson.getPath()+"\" generate success!");
 
-        return recipeName;
+        return recipeJson.getPath();
     }
 
     public static void createShapelessCraftingRecipe(){

@@ -9,10 +9,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.container.ShapedCraftingContainer;
-import org.gloomybanana.DPRM.container.ShapelessCraftingContainer;
+import org.gloomybanana.DPRM.container.CraftingShapelessContainer;
 
-public class ShapelessCraftingSceen extends ContainerScreen<ShapelessCraftingContainer> {
+public class ShapelessCraftingSceen extends ContainerScreen<CraftingShapelessContainer> {
     //Screen背景材质
     private final ResourceLocation INVSCREEN_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/crafting_table.png");
     private final int textureWidth = 176;
@@ -28,7 +27,7 @@ public class ShapelessCraftingSceen extends ContainerScreen<ShapelessCraftingCon
     TextFieldWidget textFieldWidget;
     Button button;
 
-    public ShapelessCraftingSceen(ShapelessCraftingContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+    public ShapelessCraftingSceen(CraftingShapelessContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
         //设置Screen的尺寸
         this.xSize = textureWidth;

@@ -2,9 +2,9 @@ package org.gloomybanana.DPRM.Screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -12,25 +12,30 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.network.PacketDistributor;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.container.ShapedCraftingContainer;
-import org.gloomybanana.DPRM.file.FileManager;
+import org.gloomybanana.DPRM.container.CraftingShapedContainer;
+import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.network.Networking;
+import org.gloomybanana.DPRM.network.SendPack;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer> implements IContainerListener {
+
+public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer> implements IContainerListener {
     //Screen背景材质
     private final ResourceLocation CRAFTING_TABLE_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/crafting_table.png");
     private final int textureWidth = 176;
     private final int textureHeight = 216;
-    private boolean widthTooNarrow;
 
     //gui本地化
     TranslationTextComponent title = new TranslationTextComponent("gui."+DPRM.MOD_ID+".shaped_crafting");
@@ -39,16 +44,16 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
     TextFieldWidget recipeNameInput;//文本域
     Button confirmBtn;//按钮
 
-    private ShapedCraftingContainer shapedCraftingContainer;
+    private final CraftingShapedContainer craftingShapedContainer;
 
     //boolean
     boolean recipeNameIsEmpty = true;
-    public ShapedCraftingSceen(ShapedCraftingContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
-        super(screenContainer, inv, titleIn);
+    public ShapedCraftingSceen(CraftingShapedContainer craftingShapedContainer, PlayerInventory inv, ITextComponent titleIn) {
+        super(craftingShapedContainer, inv, titleIn);
         //设置ContainerScreen的尺寸
         this.xSize = 176;
         this.ySize = 166;
-        this.shapedCraftingContainer = screenContainer;
+        this.craftingShapedContainer = craftingShapedContainer;
 
     }
 
@@ -56,9 +61,7 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
     protected void init() {
 
         //添加文本输入框
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-        this.recipeNameInput = new TextFieldWidget(this.font, i + 92, j + 12, 80, 12, recipeName.getString());
+        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft + 92, guiTop + 12, 80, 12, recipeName.getString());
         this.recipeNameInput.setCanLoseFocus(false);
         this.recipeNameInput.changeFocus(true);
         this.recipeNameInput.setTextColor(-1);
@@ -73,16 +76,21 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         //添加按钮
         this.confirmBtn = new Button(this.guiLeft + 90, this.height / 2 - 23, 70, 20, addRecipe.getString(), (button) -> {
 
+
+            String recipeDirPath = this.craftingShapedContainer.getPacketBuffier().readString();
             try {
-                FileManager.createShapedCraftingRecipe(shapedCraftingContainer.inventorySlots,recipeNameInput.getText(),"demo", (ServerPlayerEntity) playerInventory.player);
+                String recipePath = JsonManager.createShapedCraftingRecipe(craftingShapedContainer.craftTableSlots, recipeNameInput.getText(), "textgroup", recipeDirPath);
+                playerInventory.player.sendMessage(new StringTextComponent("成功创建配方："+recipePath));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.onClose();
+            System.out.println(recipeDirPath);
+
+            this.minecraft.player.closeScreen();
         });
-        this.confirmBtn.active = true;
+        this.confirmBtn.active = false;
+        this.confirmBtn.changeFocus(true);
         this.addButton(confirmBtn);
-//        this.children.add(confirmBtn);
 
 
         super.init();
@@ -94,7 +102,7 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
 
         //渲染组件
         this.recipeNameInput.render(mouseX, mouseY, particleTick);
-
+        this.confirmBtn.render(mouseX,mouseY,particleTick);
         //Tooltips
         this.renderHoveredToolTip(mouseX, mouseY);
 
@@ -119,8 +127,11 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         this.minecraft.keyboardListener.enableRepeatEvents(false);
         this.container.removeListener(this);
     }
+
+    //关闭除Esc以及文字输入之外的其他键盘按键触发时间
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
         if (p_keyPressed_1_ == 256) {
+
             this.minecraft.player.closeScreen();
         }
 
@@ -133,9 +144,9 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(CRAFTING_TABLE_TEXTURE);
-        this.blit(guiLeft, guiTop, 0, 0, 176, 166, textureWidth, textureHeight);
+        blit(guiLeft, guiTop, 0, 0, 176, 166, textureWidth, textureHeight);
+        blit(guiLeft + 88, guiTop + 8, 0, 166 + (this.recipeNameInput.isFocused() ? 0 : 16), 80, 16, textureWidth, textureHeight);
 
-        this.blit(guiLeft + 88, guiTop + 8, 0, 166 + (this.recipeNameInput.isFocused() ? 0 : 16), 80, 16, textureWidth, textureHeight);
 
     }
 
@@ -143,6 +154,7 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         this.font.drawString(this.title.getString(), 28.0F, 6.0F, 4210752);
+
     }
 
     private void inputResponder(String inputText) {
@@ -174,5 +186,9 @@ public class ShapedCraftingSceen extends ContainerScreen<ShapedCraftingContainer
     @Override
     public void sendWindowProperty(Container containerIn, int varToUpdate, int newValue) {
 
+    }
+
+    public CraftingShapedContainer getCraftingShapedContainer() {
+        return craftingShapedContainer;
     }
 }

@@ -8,16 +8,19 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import org.gloomybanana.DPRM.hander.Registry;
 
-public class ShapedCraftingContainer extends Container {
+public class CraftingShapelessContainer extends Container {
 
+    private final PacketBuffer packetBuffier;
     public CraftingInventory craftMatrix = new CraftingInventory(this, 3, 3);
     public IInventory craftResult = new CraftResultInventory();
 
-    public ShapedCraftingContainer(int id, PlayerInventory playerInventory) {
+    public CraftingShapelessContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
         super(Registry.shapedCraftingContainer.get(),id);
 
+        this.packetBuffier = packetBuffer;
         //产物槽
         this.addSlot(new Slot(this.craftResult, 0, 124, 35));
         //3x3合成台插槽
@@ -65,4 +68,7 @@ public class ShapedCraftingContainer extends Container {
         addSlotRange(inventory, 0, leftCol, topRow, 9, 18);
     }
 
+    public PacketBuffer getPacketBuffier() {
+        return packetBuffier;
+    }
 }

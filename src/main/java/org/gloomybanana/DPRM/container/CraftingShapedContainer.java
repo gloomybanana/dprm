@@ -2,26 +2,51 @@ package org.gloomybanana.DPRM.container;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
+import org.gloomybanana.DPRM.file.JsonManager;
 import org.gloomybanana.DPRM.hander.Registry;
 
-public class ShapelessCraftingContainer extends Container {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+public class CraftingShapedContainer extends Container {
+
+    private final PacketBuffer packetBuffier;
     public CraftingInventory craftMatrix = new CraftingInventory(this, 3, 3);
     public IInventory craftResult = new CraftResultInventory();
-
-    public ShapelessCraftingContainer(int id, PlayerInventory playerInventory) {
+    public PlayerInventory playerInventory;
+    public Slot[] craftTableSlots = new Slot[10];
+    List<Slot> slots = new ArrayList<>();
+    public CraftingShapedContainer(int id, PlayerInventory playerInventory,PacketBuffer packetBuffer) {
         super(Registry.shapedCraftingContainer.get(),id);
-
+        this.playerInventory = playerInventory;
+        this.packetBuffier = packetBuffer;
         //产物槽
-        this.addSlot(new Slot(this.craftResult, 0, 124, 35));
         //3x3合成台插槽
-        for (int y = 0; y < 3; ++y) for (int x = 0; x < 3; ++x) this.addSlot(new Slot(this.craftMatrix, x + y * 3, 30 + x * 18, 17 + y * 18));
+//        this.addSlot(new Slot(this.craftResult, 0, 124, 35));
+//        for (int y = 0; y < 3; ++y) for (int x = 0; x < 3; ++x) this.addSlot(new Slot(this.craftMatrix, x + y * 3, 30 + x * 18, 17 + y * 18));
+
+        craftTableSlots[0] = this.addSlot(new Slot(this.craftResult, 0, 124, 35));
+        craftTableSlots[1] = this.addSlot(new Slot(this.craftMatrix, 0, 30 + 0 * 18, 17 + 0 * 18));
+        craftTableSlots[2] = this.addSlot(new Slot(this.craftMatrix, 1, 30 + 1 * 18, 17 + 0 * 18));
+        craftTableSlots[3] = this.addSlot(new Slot(this.craftMatrix, 2, 30 + 2 * 18, 17 + 0 * 18));
+        craftTableSlots[4] = this.addSlot(new Slot(this.craftMatrix, 3, 30 + 0 * 18, 17 + 1 * 18));
+        craftTableSlots[5] = this.addSlot(new Slot(this.craftMatrix, 4, 30 + 1 * 18, 17 + 1 * 18));
+        craftTableSlots[6] = this.addSlot(new Slot(this.craftMatrix, 5, 30 + 2 * 18, 17 + 1 * 18));
+        craftTableSlots[7] = this.addSlot(new Slot(this.craftMatrix, 6, 30 + 0 * 18, 17 + 2 * 18));
+        craftTableSlots[8] = this.addSlot(new Slot(this.craftMatrix, 7, 30 + 1 * 18, 17 + 2 * 18));
+        craftTableSlots[9] = this.addSlot(new Slot(this.craftMatrix, 8, 30 + 2 * 18, 17 + 2 * 18));
+
         //玩家背包
         layoutPlayerInventorySlots(playerInventory, 8, 84);
     }
@@ -65,4 +90,8 @@ public class ShapelessCraftingContainer extends Container {
         addSlotRange(inventory, 0, leftCol, topRow, 9, 18);
     }
 
+
+    public PacketBuffer getPacketBuffier() {
+        return packetBuffier;
+    }
 }

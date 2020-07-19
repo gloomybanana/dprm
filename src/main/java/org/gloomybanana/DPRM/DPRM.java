@@ -19,7 +19,7 @@ public class DPRM {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         Registry.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         Registry.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        Registry.CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        Registry.CONTAINERS_TYPE.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
     public void setup(final FMLCommonSetupEvent event){
 

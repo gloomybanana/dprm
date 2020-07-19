@@ -8,8 +8,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import org.gloomybanana.DPRM.command.MenuScreenCommand;
-import org.gloomybanana.DPRM.command.ShapedCraftingCommand;
-import org.gloomybanana.DPRM.command.ShapelessCraftingCommand;
+import org.gloomybanana.DPRM.command.CraftingShapedCommand;
+import org.gloomybanana.DPRM.command.CraftingShapelessCommand;
 
 @Mod.EventBusSubscriber
 public class CommandEventHander {
@@ -23,15 +23,15 @@ public class CommandEventHander {
         menu.requires((commandSource)-> commandSource.hasPermissionLevel(0));//设置为一般玩家权限
         menu.executes(MenuScreenCommand.instance);
         dprm.then(menu);//绑定到"dprm"节点上
-        //命令节点"shaped_crafting"
-        LiteralArgumentBuilder<CommandSource> shaped_crafting = Commands.literal("shaped_crafting");//新建节点名
+        //命令节点"crafting_shaped"
+        LiteralArgumentBuilder<CommandSource> shaped_crafting = Commands.literal("crafting_shaped");//新建节点名
         shaped_crafting.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
-        shaped_crafting.executes(ShapedCraftingCommand.instance);//命令功能
+        shaped_crafting.executes(CraftingShapedCommand.instance);//命令功能
         dprm.then(shaped_crafting);//绑定到"dprm"节点上
-        //命令节点"shapeless_crafting"
-        LiteralArgumentBuilder<CommandSource> shapeless_crafting = Commands.literal("shapeless_crafting");//新建节点名
+        //命令节点"crafting_shapeless"
+        LiteralArgumentBuilder<CommandSource> shapeless_crafting = Commands.literal("crafting_shapeless");//新建节点名
         shapeless_crafting.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
-        shapeless_crafting.executes(ShapelessCraftingCommand.instance);//命令功能
+        shapeless_crafting.executes(CraftingShapelessCommand.instance);//命令功能
         dprm.then(shapeless_crafting);//绑定到"dprm"节点上
 
         //注册命令
