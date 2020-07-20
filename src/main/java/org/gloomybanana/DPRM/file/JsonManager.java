@@ -1,99 +1,169 @@
 package org.gloomybanana.DPRM.file;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class JsonManager {
     /**
      * 创建数据包
-     * @param recipeDirPath 配方路径
-     * @return 原版数据包recipes路径
-     * @throws IOException 异常
+     * @param jsonPacket jsonPacket
+     * @return 数据包文件夹
+     * @throws IOException
      */
-    public static File createMinecraftDatapackRecipesDir(String recipeDirPath) throws IOException {
+    private static File createDatapack(JSONObject jsonPacket) throws IOException {
+        String player_name = jsonPacket.getString("player_name");
+        String datapacks_dir_path = jsonPacket.getString("datapacks_dir_path");
+        File pack_mcmeta = new File(datapacks_dir_path+"\\add_by_"+player_name+"\\pack.mcmeta");
+        if (!pack_mcmeta.exists()){
+            boolean mkdirs = pack_mcmeta.getParentFile().mkdirs();
+            OutputStream outputStream = new FileOutputStream(pack_mcmeta);
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8");
+            writer.append("{\n" + "    \"pack\": {\n" + "        \"description\": \"dprm resources\",\n" + "        \"pack_format\": 5,\n" + "        \"_comment\": \" " + "add by ").append(player_name).append(" recipe maker").append(".\"\n").append("    }\n").append("}\n");
+            writer.close();
+            outputStream.close();
+            System.out.println("gen add_by_"+ player_name +" datapack successed!");
+        }
+        return pack_mcmeta.getParentFile();
+    }
 
-        System.out.println("recipeDirPath:" + recipeDirPath);
-        File recipeDir = new File(recipeDirPath);
+    /**
+     * 创建配方json文件到数据包
+     * @param jsonPacket "player_name"玩家名,"datapacks_dir_path"数据包文件夹路径
+     * @param recipe 配方Json对象
+     * @return
+     */
+    public static JSONObject createJsonFile(JSONObject jsonPacket,JSONObject recipe,String recipeName){
+        JSONObject result = new JSONObject();
+        try {
+            File datapack = createDatapack(jsonPacket);
+            File recipe_json = new File(datapack.getPath() + "//data//minecraft//recipes//" + recipeName + ".json");
+            boolean mkdirs = recipe_json.getParentFile().mkdirs();
+            OutputStream outputStream = new FileOutputStream(recipe_json);
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8");
+            writer.append(JSON.toJSONString(recipe, SerializerFeature.PrettyFormat));
+            writer.close();
+            outputStream.close();
 
-        //  .\saves\New World\datapacks\add_by_Dev\data\minecraft\recipes
-//        Pattern p = Pattern.compile("datapacks\\\\(.*?)\\\\data");
-//        String datapackName = p.matcher(recipeDirPath).group(1);
-//        System.out.println(datapackName);
+            System.out.println("gen recipe \""+ recipeName +"\" successed!");
+            result.put("success",true);
+            result.put("recipe",recipe);
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            result.put("success",false);
+            result.put("recipe","");
+            return result;
+        }
+    }
 
-        if (!recipeDir.exists()) {
-            boolean mkdir = recipeDir.mkdirs();
-
-            String pack_mcmetaPath = recipeDir.getParentFile().getParentFile().getParentFile().getPath();
-            File pack_mcmeta = new File(pack_mcmetaPath + "\\pack.mcmeta");
-            System.out.println("pack_mcmeta:"+pack_mcmetaPath);
-
-            if (mkdir) {
-                OutputStream outputStream = new FileOutputStream(pack_mcmeta);
-                OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8");
-                writer.append("{\n" +
-                        "    \"pack\": {\n" +
-                        "        \"description\": \"dprm resources\",\n" +
-                        "        \"pack_format\": 5,\n" +
-                        "        \"_comment\": \" " + "add by datapack recipe maker" + ".\"\n" +
-                        "    }\n" +
-                        "}\n");
-                writer.close();
-                outputStream.close();
-                System.out.println("datapack \""+"datapackName"+"\" generate success!");
-                return recipeDir.getParentFile().getParentFile().getParentFile();
+    /**
+     * 生成有序合成配方json
+     * @param slots 合成界面插槽
+     * @param groupName group名
+     * @return 有序合成配方json
+     */
+    public static JSONObject genCraftingShapedRecipe(Slot[] slots,String groupName) {
+        JSONObject craftingRecipe = new JSONObject(true);
+        craftingRecipe.put("type","minecraft:crafting_shaped");
+        craftingRecipe.put("group", groupName);
+        craftingRecipe.put("pattern",craftingShapedPatten(slots));
+        JSONObject key = new JSONObject();
+        for (int i = 1; i <=9 ; i++) {
+            if (!slots[i].getStack().isEmpty()){
+                JSONObject itemStack = new JSONObject();
+                itemStack.put("item",slots[i].getStack().getItem().getRegistryName().toString());
+                key.put(""+i,itemStack);
             }
         }
+        craftingRecipe.put("key",key);
+        JSONObject result = new JSONObject();
+        result.put("item",slots[0].getStack().getItem().getRegistryName().toString());
+        result.put("count",slots[0].getStack().getCount());
+        craftingRecipe.put("result",result);
+        return craftingRecipe;
+    }
+
+    /**
+     * 生成无序合成配方json
+     * @param slots 合成界面插槽
+     * @param groupName group名
+     * @return 无序合成配方json
+     */
+    public static JSONObject genCraftingShapelessRecipe(Slot[] slots,String groupName){
+        //TODO
         return null;
     }
 
     /**
-     * 创建有序合成json配方文件
-     * @param slots 有序合成Container插槽
-     * @param recipeName recipe名称
-     * @param groupName group名称
-     * @param recipeDirPath 配方路径
-     * @return 数据包名称
-     * @throws IOException 异常
+     * 生成熔炉配方json
+     * @param slots 制作面插槽
+     * @param groupName group名
+     * @return 熔炉配方json
      */
-    public static String createShapedCraftingRecipe(Slot[] slots,String recipeName,String groupName,String recipeDirPath) throws IOException {
-
-        File datapackRecipesDir = createMinecraftDatapackRecipesDir(recipeDirPath);
-
-
-        File recipeJson = new File(recipeDirPath + "//" + recipeName + ".json");
-        OutputStream outputStream = new FileOutputStream(recipeJson);
-        OutputStreamWriter writer = new OutputStreamWriter(outputStream, "UTF-8");
-        writer.append("{\n" +
-                "    \"type\": \"minecraft:crafting_shaped\",\n" +
-                "    \"group\": \"" + groupName +"\",\n" +
-                "    \"pattern\": [\n" +
-                        JsonUtil.getJsonPattern(slots) +
-                "    ],\n" +
-                "    \"key\": {\n" +
-                        JsonUtil.getJsonKey(slots) +
-                "    },\n" +
-                "    \"result\": {\n" +
-                        JsonUtil.getJsonCraftingResult(slots[0].getStack()) +
-                "    }\n" +
-                "}");
-        writer.close();
-        outputStream.close();
-        System.out.println("recipe \""+recipeJson.getPath()+"\" generate success!");
-
-        return recipeJson.getPath();
+    public static JSONObject genFurnanceRecipe(Slot[] slots,String groupName){
+        //TODO
+        return null;
     }
 
-    public static void createShapelessCraftingRecipe(){
+    /**
+     * 获取有序合成排列模式
+     * @param slots 合成插槽
+     * @return 有序合成排列模式
+     */
+    public static List<String> craftingShapedPatten(Slot[] slots){
+        List<String> pattern = new ArrayList<>();
+        String p1 = " ",p2 = " ",p3 = " ",p4 = " ",p5 = " ",p6 = " ",p7 = " ",p8 = " ",p9 = " ";
+        if (!slots[1].getStack().isEmpty())p1 = "1";
+        if (!slots[2].getStack().isEmpty())p2 = "2";
+        if (!slots[3].getStack().isEmpty())p3 = "3";
+        if (!slots[4].getStack().isEmpty())p4 = "4";
+        if (!slots[5].getStack().isEmpty())p5 = "5";
+        if (!slots[6].getStack().isEmpty())p6 = "6";
+        if (!slots[7].getStack().isEmpty())p7 = "7";
+        if (!slots[8].getStack().isEmpty())p8 = "8";
+        if (!slots[9].getStack().isEmpty())p9 = "9";
 
-    }
-
-    public static void createFurnanceRecipe(){
-
+        if (                                                                    slots[3].getStack().isEmpty() &&
+                                                                                slots[6].getStack().isEmpty() &&
+                slots[7].getStack().isEmpty() && slots[8].getStack().isEmpty() && slots[9].getStack().isEmpty())
+        {
+            pattern.add(p1+p2);
+            pattern.add(p4+p5);
+            return pattern;
+        }
+        if (slots[1].getStack().isEmpty() &&
+                slots[4].getStack().isEmpty() &&
+                slots[7].getStack().isEmpty() && slots[8].getStack().isEmpty() && slots[9].getStack().isEmpty())
+        {
+            pattern.add(p2+p3);
+            pattern.add(p5+p6);
+            return pattern;
+        }
+        if (slots[1].getStack().isEmpty() && slots[2].getStack().isEmpty() && slots[3].getStack().isEmpty() &&
+                slots[6].getStack().isEmpty() &&
+                slots[9].getStack().isEmpty())
+        {
+            pattern.add(p4+p5);
+            pattern.add(p7+p8);
+            return pattern;
+        }
+        if (slots[1].getStack().isEmpty() && slots[2].getStack().isEmpty() && slots[3].getStack().isEmpty() &&
+                slots[4].getStack().isEmpty() &&
+                slots[7].getStack().isEmpty()                                            )
+        {
+            pattern.add(p5+p6);
+            pattern.add(p8+p9);
+            return pattern;
+        }
+        pattern.add(0,p1+p2+p3);
+        pattern.add(1,p4+p5+p6);
+        pattern.add(2,p7+p8+p9);
+        return pattern;
     }
 }

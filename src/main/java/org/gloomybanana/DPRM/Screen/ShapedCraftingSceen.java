@@ -1,7 +1,8 @@
 package org.gloomybanana.DPRM.Screen;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -21,13 +22,13 @@ import org.gloomybanana.DPRM.container.CraftingShapedContainer;
 import org.gloomybanana.DPRM.file.JsonManager;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 
 public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer> implements IContainerListener {
     //Screen背景材质(宽：176 高：216)
     private final ResourceLocation CRAFTING_TABLE_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/crafting_table.png");
+    JSONObject jsonPacket = new JSONObject();
 
     //gui本地化
     TranslationTextComponent title = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.title");//Screen名称
@@ -57,7 +58,7 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
         this.xSize = 176;
         this.ySize = 166;
         this.craftingShapedContainer = craftingShapedContainer;
-
+        this.jsonPacket = JSON.parseObject(craftingShapedContainer.getPacketBuffier().readString());
     }
 
     @Override
@@ -92,18 +93,13 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
             System.out.println("isGroupNameEmpty:"+ isGroupNameEmpty);
             System.out.println("isCraftingSlotEmpty:"+isCraftingSlotEmpty);
             System.out.println("isResultSlotEmpty:"+isResultSlotEmpty);
+            System.out.println("isRecipeJsonExist"+isRecipeJsonExist);
 
+            JSONObject craftingShapedRecipe = JsonManager.genCraftingShapedRecipe(craftingShapedContainer.craftTableSlots, groupNameInput.getText());
+            JSONObject result = JsonManager.createJsonFile(jsonPacket,craftingShapedRecipe,recipeNameInput.getText());
+            playerInventory.player.sendMessage(new StringTextComponent("success?:"+result.getBoolean("success")));
+            this.minecraft.player.closeScreen();
 
-
-//            try {
-//                String recipePath = JsonManager.createShapedCraftingRecipe(craftingShapedContainer.craftTableSlots, recipeNameInput.getText(), groupNameInput.getText(), recipeDirPath);
-//                playerInventory.player.sendMessage(new StringTextComponent(recipeGenerateSuccessed.getFormattedText()));
-//                playerInventory.player.sendMessage(new StringTextComponent(recipePath));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-//            this.minecraft.player.closeScreen();
         });//位置，宽高，文字，按下后回调函数
 
         this.confirmBtn.active = true;//设置为禁用状态
@@ -128,8 +124,6 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
         if (this.confirmBtn.isHovered()){
             if(this.confirmBtn.active){
                 this.renderTooltip(confirmBtnActiveToolTips,mouseX,mouseY);
-            }else {
-                this.renderTooltip(confirmBtnDisableToolTips,mouseX,mouseY);
             }
         }
         ArrayList<String> recipeNameInputTooltips = new ArrayList<>();
@@ -153,11 +147,14 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
         for (int i = 1; i <= 9; i++) {
             if(!slots[i].getStack().isEmpty())isCraftingSlotEmpty = false;
         }
-        String recipeDirPath = this.craftingShapedContainer.getPacketBuffier().readString();
-        File recipeJsonPath = new File(recipeDirPath + "//" + recipeNameInput.getText() + ".json");
+
+        String datapacks_dir_path = jsonPacket.getString("datapacks_dir_path");
+        String player_name = jsonPacket.getString("player_name");
+        File recipeJsonPath = new File(datapacks_dir_path + "//add_by_"+player_name+"//data//minecraft//recipes//" + recipeNameInput.getText() + ".json");
         isRecipeJsonExist = recipeJsonPath.exists();
 
         this.confirmBtn.active = !isResultSlotEmpty && !isCraftingSlotEmpty && !isRecipeNameEmpty && !isGroupNameEmpty && !isRecipeJsonExist;
+        this.confirmBtn.changeFocus(false);
     }
 
     //移除监听器

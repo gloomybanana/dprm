@@ -1,5 +1,6 @@
 package org.gloomybanana.DPRM.command;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -15,12 +16,14 @@ public class CraftingShapedCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity serverPlayer = context.getSource().asPlayer();
-        String playerName = serverPlayer.getName().getFormattedText();
-        String recipePath = serverPlayer.getServerWorld().getSaveHandler().getWorldDirectory().getPath() + "\\datapacks\\add_by_" + playerName + "\\data\\minecraft\\recipes";
 
+        String datapacksDirPath = serverPlayer.getServerWorld().getSaveHandler().getWorldDirectory().getPath() + "\\datapacks";
+        JSONObject jsonPacket = new JSONObject();
+        jsonPacket.put("player_name",serverPlayer.getName().getFormattedText());
+        jsonPacket.put("datapacks_dir_path",datapacksDirPath);
 
-        NetworkHooks.openGui(serverPlayer,new CraftingShapedContainerProvider(serverPlayer), (packerBuffer) -> {
-            packerBuffer.writeString(recipePath);
+        NetworkHooks.openGui(serverPlayer,new CraftingShapedContainerProvider(serverPlayer), (packetBuffer) -> {
+            packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;
 
