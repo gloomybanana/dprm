@@ -1,5 +1,8 @@
 {
-  "gui.dprm.shaped_crafting": "有序合成",
-  "gui.dprm.recipe_name": "配方名称",
-  "gui.dprm.add_recipe": "添加配方"
+  "gui.dprm.crafting_shaped.title": "crafting shaped",
+  "gui.dprm.crafting_shaped.recipe_name": "recipe name",
+  "gui.dprm.crafting_shaped.group_name": "group",
+  "gui.dprm.crafting_shaped.add_recipe": "add recipe",
+  "gui.dprm.crafting_shaped.add_to_datapack": "add to datapack",
+  "gui.dprm.crafting_shaped.please_complete_recipe_info": "please complete recipe info"
 }

@@ -1,5 +1,9 @@
 {
-  "gui.dprm.shaped_crafting": "Shaped Crafting",
-  "gui.dprm.recipe_name": "Recipe Name",
-  "gui.dprm.add_recipe": "Add Recipe"
+  "gui.dprm.crafting_shaped.title": "crafting shaped",
+  "gui.dprm.crafting_shaped.recipe_name": "recipe name",
+  "gui.dprm.crafting_shaped.group_name": "group",
+  "gui.dprm.crafting_shaped.add_recipe": "add recipe",
+  "gui.dprm.crafting_shaped.add_to_datapack": "add to datapack",
+  "gui.dprm.crafting_shaped.please_complete_recipe_info": "please complete recipe info",
+  "gui.dprm.crafting_shaped.recipe_generate_successed": "recipe generate successed!"
 }

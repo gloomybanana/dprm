@@ -16,16 +16,23 @@ public class CraftingShapelessContainer extends Container {
     private final PacketBuffer packetBuffier;
     public CraftingInventory craftMatrix = new CraftingInventory(this, 3, 3);
     public IInventory craftResult = new CraftResultInventory();
-
+    public Slot[] craftTableSlots = new Slot[10];
     public CraftingShapelessContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
         super(Registry.shapedCraftingContainer.get(),id);
-
         this.packetBuffier = packetBuffer;
-        //产物槽
-        this.addSlot(new Slot(this.craftResult, 0, 124, 35));
-        //3x3合成台插槽
-        for (int y = 0; y < 3; ++y) for (int x = 0; x < 3; ++x) this.addSlot(new Slot(this.craftMatrix, x + y * 3, 30 + x * 18, 17 + y * 18));
-        //玩家背包
+        //产物插槽
+        craftTableSlots[0] = this.addSlot(new Slot(this.craftResult, 0, 124, 35));
+        //3x3合成栏插槽
+        craftTableSlots[1] = this.addSlot(new Slot(this.craftMatrix, 0, 30 + 0 * 18, 17 + 0 * 18));
+        craftTableSlots[2] = this.addSlot(new Slot(this.craftMatrix, 1, 30 + 1 * 18, 17 + 0 * 18));
+        craftTableSlots[3] = this.addSlot(new Slot(this.craftMatrix, 2, 30 + 2 * 18, 17 + 0 * 18));
+        craftTableSlots[4] = this.addSlot(new Slot(this.craftMatrix, 3, 30 + 0 * 18, 17 + 1 * 18));
+        craftTableSlots[5] = this.addSlot(new Slot(this.craftMatrix, 4, 30 + 1 * 18, 17 + 1 * 18));
+        craftTableSlots[6] = this.addSlot(new Slot(this.craftMatrix, 5, 30 + 2 * 18, 17 + 1 * 18));
+        craftTableSlots[7] = this.addSlot(new Slot(this.craftMatrix, 6, 30 + 0 * 18, 17 + 2 * 18));
+        craftTableSlots[8] = this.addSlot(new Slot(this.craftMatrix, 7, 30 + 1 * 18, 17 + 2 * 18));
+        craftTableSlots[9] = this.addSlot(new Slot(this.craftMatrix, 8, 30 + 2 * 18, 17 + 2 * 18));
+        //玩家背包插槽
         layoutPlayerInventorySlots(playerInventory, 8, 84);
     }
 
