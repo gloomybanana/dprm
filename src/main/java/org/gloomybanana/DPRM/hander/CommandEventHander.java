@@ -24,15 +24,15 @@ public class CommandEventHander {
         menu.executes(MenuScreenCommand.instance);
         dprm.then(menu);//绑定到"dprm"节点上
         //命令节点"crafting_shaped"
-        LiteralArgumentBuilder<CommandSource> shaped_crafting = Commands.literal("crafting_shaped");//新建节点名
-        shaped_crafting.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
-        shaped_crafting.executes(CraftingShapedCommand.instance);//命令功能
-        dprm.then(shaped_crafting);//绑定到"dprm"节点上
+        LiteralArgumentBuilder<CommandSource> crafting_shaped = Commands.literal("crafting_shaped");//新建节点名
+        crafting_shaped.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
+        crafting_shaped.executes(CraftingShapedCommand.instance);//命令功能
+        dprm.then(crafting_shaped);//绑定到"dprm"节点上
         //命令节点"crafting_shapeless"
-        LiteralArgumentBuilder<CommandSource> shapeless_crafting = Commands.literal("crafting_shapeless");//新建节点名
-        shapeless_crafting.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
-        shapeless_crafting.executes(CraftingShapelessCommand.instance);//命令功能
-        dprm.then(shapeless_crafting);//绑定到"dprm"节点上
+        LiteralArgumentBuilder<CommandSource> crafting_shapeless = Commands.literal("crafting_shapeless");//新建节点名
+        crafting_shapeless.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
+        crafting_shapeless.executes(CraftingShapelessCommand.instance);//命令功能
+        dprm.then(crafting_shapeless);//绑定到"dprm"节点上
 
         //注册命令
         CommandDispatcher<CommandSource> commandDispatcher = event.getCommandDispatcher();

@@ -2,7 +2,6 @@ package org.gloomybanana.DPRM.container;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
@@ -10,14 +9,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
-import org.gloomybanana.DPRM.file.JsonManager;
 import org.gloomybanana.DPRM.hander.Registry;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CraftingShapedContainer extends Container {
 
@@ -26,7 +18,7 @@ public class CraftingShapedContainer extends Container {
     public IInventory craftResult = new CraftResultInventory();
     public Slot[] craftTableSlots = new Slot[10];
     public CraftingShapedContainer(int id, PlayerInventory playerInventory,PacketBuffer packetBuffer) {
-        super(Registry.shapedCraftingContainer.get(),id);
+        super(Registry.craftingShapedContainer.get(),id);
         this.packetBuffier = packetBuffer;
         //产物插槽
         craftTableSlots[0] = this.addSlot(new Slot(this.craftResult, 0, 124, 35));
@@ -42,7 +34,6 @@ public class CraftingShapedContainer extends Container {
         craftTableSlots[9] = this.addSlot(new Slot(this.craftMatrix, 8, 30 + 2 * 18, 17 + 2 * 18));
         //玩家背包插槽
         layoutPlayerInventorySlots(playerInventory, 8, 84);
-
     }
 
     //玩家是否能交互

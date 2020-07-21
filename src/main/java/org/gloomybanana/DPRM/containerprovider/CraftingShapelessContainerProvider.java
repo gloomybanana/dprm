@@ -15,11 +15,9 @@ import javax.annotation.Nullable;
 
 public class CraftingShapelessContainerProvider implements INamedContainerProvider {
     private final ServerPlayerEntity serverPlayer;
-
     public CraftingShapelessContainerProvider(ServerPlayerEntity serverPlayer) {
         this.serverPlayer = serverPlayer;
     }
-
 
     @Nullable
     @Override

@@ -1,10 +1,6 @@
 package org.gloomybanana.DPRM.containerprovider;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.EmptyByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.PreferHeapByteBufAllocator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -18,9 +14,7 @@ import org.gloomybanana.DPRM.container.CraftingShapedContainer;
 import javax.annotation.Nullable;
 
 public class CraftingShapedContainerProvider implements INamedContainerProvider {
-
     private final ServerPlayerEntity serverPlayer;
-
     public CraftingShapedContainerProvider(ServerPlayerEntity serverPlayer) {
         this.serverPlayer = serverPlayer;
     }

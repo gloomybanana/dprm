@@ -12,15 +12,15 @@ import org.gloomybanana.DPRM.containerprovider.CraftingShapedContainerProvider;
 public class CraftingShapedCommand implements Command<CommandSource> {
     public static CraftingShapedCommand instance = new CraftingShapedCommand();
 
-
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity serverPlayer = context.getSource().asPlayer();
-
         String datapacksDirPath = serverPlayer.getServerWorld().getSaveHandler().getWorldDirectory().getPath() + "\\datapacks";
         JSONObject jsonPacket = new JSONObject();
         jsonPacket.put("player_name",serverPlayer.getName().getFormattedText());
         jsonPacket.put("datapacks_dir_path",datapacksDirPath);
+
+//        int currentWindowId = serverPlayer.currentWindowId;
 
         NetworkHooks.openGui(serverPlayer,new CraftingShapedContainerProvider(serverPlayer), (packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());

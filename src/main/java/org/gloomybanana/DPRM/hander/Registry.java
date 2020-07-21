@@ -25,8 +25,8 @@ public class Registry {
     //TileEntiy
 
     //Container
-    public static RegistryObject<ContainerType<CraftingShapedContainer>> shapedCraftingContainer = CONTAINERS_TYPE.register("crafting_container", () -> IForgeContainerType.create((windowId, playerInventory, packetBuffer) -> new CraftingShapedContainer(windowId,playerInventory,packetBuffer)));
-    public static RegistryObject<ContainerType<CraftingShapelessContainer>> shapelessCraftingContainer = CONTAINERS_TYPE.register("shapeless_crafting_container", () -> IForgeContainerType.create((windowId, playerInventory, packetBuffer) -> new CraftingShapelessContainer(windowId,playerInventory,packetBuffer)));
+    public static RegistryObject<ContainerType<CraftingShapedContainer>> craftingShapedContainer = CONTAINERS_TYPE.register("crafting_shaped_container", () -> IForgeContainerType.create((windowId, playerInventory, packetBuffer) -> new CraftingShapedContainer(windowId,playerInventory,packetBuffer)));
+    public static RegistryObject<ContainerType<CraftingShapelessContainer>> craftingShapelessContainer = CONTAINERS_TYPE.register("crafting_shapeless_container", () -> IForgeContainerType.create((windowId, playerInventory, packetBuffer) -> new CraftingShapelessContainer(windowId,playerInventory,packetBuffer)));
 
 
 }

@@ -15,12 +15,9 @@ public class MenuScreenCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity player = context.getSource().asPlayer();
-//
-//        try {
-//            JsonManager.createMinecraftDatapackRecipesDir(player);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
+
+
         return 0;
     }
 

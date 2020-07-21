@@ -18,7 +18,7 @@ public class CraftingShapelessContainer extends Container {
     public IInventory craftResult = new CraftResultInventory();
     public Slot[] craftTableSlots = new Slot[10];
     public CraftingShapelessContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
-        super(Registry.shapedCraftingContainer.get(),id);
+        super(Registry.craftingShapedContainer.get(),id);
         this.packetBuffier = packetBuffer;
         //产物插槽
         craftTableSlots[0] = this.addSlot(new Slot(this.craftResult, 0, 124, 35));

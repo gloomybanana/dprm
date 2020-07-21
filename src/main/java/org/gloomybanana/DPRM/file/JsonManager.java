@@ -7,6 +7,7 @@ import net.minecraft.inventory.container.Slot;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JsonManager {
@@ -52,12 +53,12 @@ public class JsonManager {
 
             System.out.println("gen recipe \""+ recipeName +"\" successed!");
             result.put("success",true);
-            result.put("recipe",recipe);
+            result.put("dir",recipe_json.getPath());
             return result;
         } catch (IOException e) {
             e.printStackTrace();
             result.put("success",false);
-            result.put("recipe","");
+            result.put("dir","");
             return result;
         }
     }
@@ -73,8 +74,8 @@ public class JsonManager {
         craftingRecipe.put("type","minecraft:crafting_shaped");
         craftingRecipe.put("group", groupName);
         craftingRecipe.put("pattern",craftingShapedPatten(slots));
-        JSONObject key = new JSONObject();
-        for (int i = 1; i <=9 ; i++) {
+         JSONObject key = new JSONObject();
+         for (int i = 1; i <=9 ; i++) {
             if (!slots[i].getStack().isEmpty()){
                 JSONObject itemStack = new JSONObject();
                 itemStack.put("item",slots[i].getStack().getItem().getRegistryName().toString());
@@ -82,9 +83,9 @@ public class JsonManager {
             }
         }
         craftingRecipe.put("key",key);
-        JSONObject result = new JSONObject();
-        result.put("item",slots[0].getStack().getItem().getRegistryName().toString());
-        result.put("count",slots[0].getStack().getCount());
+         JSONObject result = new JSONObject();
+         result.put("item",slots[0].getStack().getItem().getRegistryName().toString());
+         result.put("count",slots[0].getStack().getCount());
         craftingRecipe.put("result",result);
         return craftingRecipe;
     }
@@ -96,8 +97,23 @@ public class JsonManager {
      * @return 无序合成配方json
      */
     public static JSONObject genCraftingShapelessRecipe(Slot[] slots,String groupName){
-        //TODO
-        return null;
+        JSONObject craftingRecipe = new JSONObject(true);
+        craftingRecipe.put("type","minecraft:crafting_shapeless");
+        craftingRecipe.put("group", groupName);
+         List<JSONObject> ingredients = new ArrayList<>();
+         for (int i = 1; i <= 9; i++) {
+            if (!slots[i].getStack().isEmpty()){
+                JSONObject itemStack = new JSONObject();
+                itemStack.put("item",slots[i].getStack().getItem().getRegistryName().toString());
+                ingredients.add(itemStack);
+            }
+        }
+        craftingRecipe.put("ingredients",ingredients);
+         JSONObject result = new JSONObject();
+         result.put("item",slots[0].getStack().getItem().getRegistryName().toString());
+         result.put("count",slots[0].getStack().getCount());
+        craftingRecipe.put("result",result);
+        return craftingRecipe;
     }
 
     /**

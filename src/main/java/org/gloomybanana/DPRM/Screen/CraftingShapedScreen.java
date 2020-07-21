@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.CraftingShapedContainer;
@@ -25,19 +24,18 @@ import java.io.File;
 import java.util.ArrayList;
 
 
-public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer> implements IContainerListener {
+public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContainer> implements IContainerListener {
     //Screen背景材质(宽：176 高：216)
     private final ResourceLocation CRAFTING_TABLE_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/crafting_table.png");
     JSONObject jsonPacket = new JSONObject();
 
     //gui本地化
-    TranslationTextComponent title = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.title");//Screen名称
-    TranslationTextComponent recipeName = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.recipe_name");//配方名
-    TranslationTextComponent groupName = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.group_name");//组名
-    TranslationTextComponent addRecipe = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.add_recipe");//添加配方
-    TranslationTextComponent addToDatapack = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.add_to_datapack");//添加至数据包
-    TranslationTextComponent pleaseCompleteRecipeInfo = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.please_complete_recipe_info");//完善配方信息
-    TranslationTextComponent recipeGenerateSuccessed = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.recipe_generate_successed");//数据包生成成功
+    TranslationTextComponent TITLE = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.title");//Screen名称
+    TranslationTextComponent RECIPE_NAME = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.recipe_name");//配方名
+    TranslationTextComponent GROUP_NAME = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.group_name");//组名
+    TranslationTextComponent ADD_RECIPE = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.add_recipe");//添加配方
+    TranslationTextComponent ADD_TO_DATAPACK = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.add_to_datapack");//添加至数据包
+    TranslationTextComponent PLEASE_COMPLETE_RECIPE_INFO = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.please_complete_recipe_info");//完善配方信息
     TextFieldWidget recipeNameInput;//配方名输入组件
     TextFieldWidget groupNameInput;//组名输入组件
     Button confirmBtn;//按钮
@@ -50,9 +48,8 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
 
     private final CraftingShapedContainer craftingShapedContainer;
 
-    //boolean
-    boolean recipeNameIsEmpty = true;
-    public ShapedCraftingSceen(CraftingShapedContainer craftingShapedContainer, PlayerInventory inv, ITextComponent titleIn) {
+
+    public CraftingShapedScreen(CraftingShapedContainer craftingShapedContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(craftingShapedContainer, inv, titleIn);
         //设置ContainerScreen的尺寸
         this.xSize = 176;
@@ -66,29 +63,29 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
         super.init();
 
         //配方名输入框
-        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 12, 80, 12,recipeName.getString());//字体，位置，宽高，信息
+        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 12, 80, 12, RECIPE_NAME.getString());//字体，位置，宽高，信息
         this.recipeNameInput.setTextColor(-1);
         this.recipeNameInput.setDisabledTextColour(-1);
         this.recipeNameInput.setEnableBackgroundDrawing(false);
         this.recipeNameInput.setMaxStringLength(35);//最大输入长度
+        this.recipeNameInput.setCanLoseFocus(true);
         this.recipeNameInput.setResponder(this::recipeNameinputResponder);//每次输入后的回调函数
         this.children.add(this.recipeNameInput);
         //组名输入框
-        this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 25, 80, 12,groupName.getString());//字体，位置，宽高，信息
+        this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 28, 80, 12, GROUP_NAME.getString());//字体，位置，宽高，信息
         this.groupNameInput.setTextColor(-1);
         this.groupNameInput.setDisabledTextColour(-1);
         this.groupNameInput.setEnableBackgroundDrawing(false);
         this.groupNameInput.setMaxStringLength(35);//最大输入长度
+        this.groupNameInput.setCanLoseFocus(true);
         this.groupNameInput.setResponder(this::groupNameinputResponder);//每次输入后的回调函数
         this.children.add(this.groupNameInput);
-
-        //
-
+        //监听器
         this.container.addListener(this);
 
 
         //添加按钮
-        this.confirmBtn = new Button(this.guiLeft - 80, this.guiTop + 40, 70, 20, addRecipe.getString(), (button) -> {
+        this.confirmBtn = new Button(this.guiLeft - 80, this.guiTop + 40, 70, 20, ADD_RECIPE.getString(), (button) -> {
             System.out.println("isCraftingSlotEmpty:"+isCraftingSlotEmpty);
             System.out.println("isGroupNameEmpty:"+ isGroupNameEmpty);
             System.out.println("isCraftingSlotEmpty:"+isCraftingSlotEmpty);
@@ -97,47 +94,49 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
 
             JSONObject craftingShapedRecipe = JsonManager.genCraftingShapedRecipe(craftingShapedContainer.craftTableSlots, groupNameInput.getText());
             JSONObject result = JsonManager.createJsonFile(jsonPacket,craftingShapedRecipe,recipeNameInput.getText());
-            playerInventory.player.sendMessage(new StringTextComponent("success?:"+result.getBoolean("success")));
+            if (result.getBoolean("success")){
+                System.out.println(result.getString("dir"));
+                playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.recipe_generate_successed",result.getString("dir")));
+            }else {
+                playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.recipe_generate_failed",result.getString("dir")));
+            }
             this.minecraft.player.closeScreen();
 
         });//位置，宽高，文字，按下后回调函数
-
         this.confirmBtn.active = true;//设置为禁用状态
-        this.confirmBtn.changeFocus(true);//设置焦点
         this.addButton(confirmBtn);//添加到Screen
-
     }
 
     @Override
     public void render(int mouseX, int mouseY, float particleTick) {
         super.render(mouseX, mouseY, particleTick);
-
         //渲染组件
         this.recipeNameInput.render(mouseX, mouseY, particleTick);
+        this.groupNameInput.render(mouseX, mouseY, particleTick);
         this.confirmBtn.render(mouseX,mouseY,particleTick);
-        //Tooltips
+        //渲染Tooltips
         this.renderHoveredToolTip(mouseX, mouseY);
         ArrayList<String> confirmBtnActiveToolTips = new ArrayList<>();
         ArrayList<String> confirmBtnDisableToolTips = new ArrayList<>();
-        confirmBtnActiveToolTips.add(addToDatapack.getFormattedText());
-        confirmBtnDisableToolTips.add(pleaseCompleteRecipeInfo.getFormattedText());
-        if (this.confirmBtn.isHovered()){
+        confirmBtnActiveToolTips.add(ADD_TO_DATAPACK.getFormattedText());
+        confirmBtnDisableToolTips.add(PLEASE_COMPLETE_RECIPE_INFO.getFormattedText());
+        if (this.confirmBtn.isHovered()&&!groupNameInput.isFocused()){
             if(this.confirmBtn.active){
                 this.renderTooltip(confirmBtnActiveToolTips,mouseX,mouseY);
             }
         }
         ArrayList<String> recipeNameInputTooltips = new ArrayList<>();
-        recipeNameInputTooltips.add("配方名称");
+        recipeNameInputTooltips.add(recipeNameInput.getMessage());
         if (this.recipeNameInput.isHovered()&&!recipeNameInput.isFocused()){
             this.renderTooltip(recipeNameInputTooltips,mouseX,mouseY);
         }
         ArrayList<String> groupNameInputTooltips = new ArrayList<>();
-        groupNameInputTooltips.add("配方名称");
+        groupNameInputTooltips.add(groupNameInput.getMessage());
         if (this.groupNameInput.isHovered()&&!groupNameInput.isFocused()){
             this.renderTooltip(groupNameInputTooltips,mouseX,mouseY);
         }
-    }
 
+    }
 
     public void tick() {
         super.tick();
@@ -154,7 +153,6 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
         isRecipeJsonExist = recipeJsonPath.exists();
 
         this.confirmBtn.active = !isResultSlotEmpty && !isCraftingSlotEmpty && !isRecipeNameEmpty && !isGroupNameEmpty && !isRecipeJsonExist;
-        this.confirmBtn.changeFocus(false);
     }
 
     //移除监听器
@@ -194,7 +192,7 @@ public class ShapedCraftingSceen extends ContainerScreen<CraftingShapedContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        this.font.drawString(this.title.getString(), 28.0F, 6.0F, 4210752);
+        this.font.drawString(this.TITLE.getString(), 28.0F, 6.0F, 4210752);
 
     }
 
