@@ -7,9 +7,7 @@ import net.minecraft.command.Commands;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import org.gloomybanana.DPRM.command.MenuScreenCommand;
-import org.gloomybanana.DPRM.command.CraftingShapedCommand;
-import org.gloomybanana.DPRM.command.CraftingShapelessCommand;
+import org.gloomybanana.DPRM.command.*;
 
 @Mod.EventBusSubscriber
 public class CommandEventHander {
@@ -33,6 +31,29 @@ public class CommandEventHander {
         crafting_shapeless.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
         crafting_shapeless.executes(CraftingShapelessCommand.instance);//命令功能
         dprm.then(crafting_shapeless);//绑定到"dprm"节点上
+        //命令节点"smelting"
+        LiteralArgumentBuilder<CommandSource> smelting = Commands.literal("smelting");//新建节点名
+        smelting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
+        smelting.executes(SmeltingCommand.instance);//命令功能
+        dprm.then(smelting);
+        //命令节点"smoking"
+        LiteralArgumentBuilder<CommandSource> smoking = Commands.literal("smoking");
+        smoking.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
+        smoking.executes(SmokingCommand.instance);//命令功能
+        //命令节点"blasting"
+        LiteralArgumentBuilder<CommandSource> blasting = Commands.literal("blasting");
+        blasting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
+        blasting.executes(BlastingCommand.instance);//命令功能
+        //命令节点"campfire_cooking"
+        LiteralArgumentBuilder<CommandSource> campfire_cooking = Commands.literal("campfire_cooking");
+        campfire_cooking.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
+        campfire_cooking.executes(CampfireCookingCommand.instance);//命令功能
+        //命令节点"stonecutting"
+        LiteralArgumentBuilder<CommandSource> stonecutting = Commands.literal("stonecutting");
+        stonecutting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
+        stonecutting.executes(StonecuttingCommand.instance);//命令功能
+        //命令节点"smithing"
+        //TODO
 
         //注册命令
         CommandDispatcher<CommandSource> commandDispatcher = event.getCommandDispatcher();

@@ -7,10 +7,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.gloomybanana.DPRM.containerprovider.CraftingShapedContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.SmeltingContainerProvider;
 
-public class CraftingShapedCommand implements Command<CommandSource> {
-    public static CraftingShapedCommand instance = new CraftingShapedCommand();
+public class SmeltingCommand implements Command<CommandSource> {
+    public static SmeltingCommand instance = new SmeltingCommand();
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
@@ -20,7 +20,7 @@ public class CraftingShapedCommand implements Command<CommandSource> {
         jsonPacket.put("player_name",serverPlayer.getName().getFormattedText());
         jsonPacket.put("datapacks_dir_path",datapacksDirPath);
 
-        NetworkHooks.openGui(serverPlayer,new CraftingShapedContainerProvider(serverPlayer), (packetBuffer) -> {
+        NetworkHooks.openGui(serverPlayer,new SmeltingContainerProvider(serverPlayer), (packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;
