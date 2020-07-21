@@ -9,6 +9,8 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.command.SmokingCommand;
 import org.gloomybanana.DPRM.container.SmokingContainer;
 
@@ -33,7 +35,7 @@ public class SmokingContainerProvider implements INamedContainerProvider {
 
     @Override
     public ITextComponent getDisplayName() {
-        return new StringTextComponent("DPRM Container Provider");
+        return new TranslationTextComponent("gui."+ DPRM.MOD_ID +".smoking.title");
     }
 
     public ServerPlayerEntity getServerPlayer() {

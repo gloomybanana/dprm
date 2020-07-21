@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Iterator;
 import java.util.List;
 
-public class MenuGui extends AbstractGui implements IRenderable, IGuiEventListener, IRecipeUpdateListener, IRecipePlacer<Ingredient> {
+public class MenuScreen extends AbstractGui implements IRenderable, IGuiEventListener, IRecipeUpdateListener, IRecipePlacer<Ingredient> {
     public static ResourceLocation MENUGUI_TEXTURE;
 
 

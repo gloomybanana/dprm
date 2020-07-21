@@ -122,7 +122,51 @@ public class JsonManager {
      * @param groupName group名
      * @return 熔炉配方json
      */
-    public static JSONObject genFurnanceRecipe(Slot[] slots,String groupName){
+    public static JSONObject genSmeltingRecipe(Slot[] slots, String groupName){
+        //TODO
+        return null;
+    }
+
+    /**
+     * 生成高炉配方json
+     * @param slots 界面面插槽
+     * @param groupName group名
+     * @return 高炉配方json
+     */
+    public static JSONObject genBlastingRecipe(Slot[] slots,String groupName){
+        //TODO
+        return null;
+    }
+
+    /**
+     * 生成营火配方json
+     * @param slots 界面面插槽
+     * @param groupName group名
+     * @return 营火配方json
+     */
+    public static JSONObject genCampfireCookingRecipe(Slot[] slots,String groupName){
+        //TODO
+        return null;
+    }
+
+    /**
+     * 生成烟熏配方json
+     * @param slots 界面面插槽
+     * @param groupName group名
+     * @return 烟熏配方json
+     */
+    public static JSONObject genSmokingRecipe(Slot[] slots,String groupName){
+        //TODO
+        return null;
+    }
+
+    /**
+     * 生成切石机配方json
+     * @param slots 界面面插槽
+     * @param groupName group名
+     * @return 切石机配方json
+     */
+    public static JSONObject genStonecuttingRecipe(Slot[] slots,String groupName){
         //TODO
         return null;
     }

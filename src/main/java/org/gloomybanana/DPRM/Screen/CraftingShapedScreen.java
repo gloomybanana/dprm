@@ -27,33 +27,32 @@ import java.util.ArrayList;
 public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContainer> implements IContainerListener {
     //Screen背景材质(宽：176 高：216)
     private final ResourceLocation CRAFTING_TABLE_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/crafting_table.png");
+    private final CraftingShapedContainer craftingShapedContainer;
     JSONObject jsonPacket = new JSONObject();
 
     //gui本地化
-    TranslationTextComponent TITLE = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.title");//Screen名称
     TranslationTextComponent RECIPE_NAME = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.recipe_name");//配方名
     TranslationTextComponent GROUP_NAME = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.group_name");//组名
     TranslationTextComponent ADD_RECIPE = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.add_recipe");//添加配方
     TranslationTextComponent ADD_TO_DATAPACK = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.add_to_datapack");//添加至数据包
     TranslationTextComponent PLEASE_COMPLETE_RECIPE_INFO = new TranslationTextComponent("gui."+DPRM.MOD_ID+".crafting_shaped.please_complete_recipe_info");//完善配方信息
+
+    //组件
     TextFieldWidget recipeNameInput;//配方名输入组件
     TextFieldWidget groupNameInput;//组名输入组件
     Button confirmBtn;//按钮
 
+    //提交按钮判断条件
     Boolean isResultSlotEmpty = true;
     Boolean isCraftingSlotEmpty = true;
     Boolean isRecipeNameEmpty = true;
     Boolean isGroupNameEmpty = true;
     Boolean isRecipeJsonExist = false;
 
-    private final CraftingShapedContainer craftingShapedContainer;
 
 
     public CraftingShapedScreen(CraftingShapedContainer craftingShapedContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(craftingShapedContainer, inv, titleIn);
-        //设置ContainerScreen的尺寸
-        this.xSize = 176;
-        this.ySize = 166;
         this.craftingShapedContainer = craftingShapedContainer;
         this.jsonPacket = JSON.parseObject(craftingShapedContainer.getPacketBuffier().readString());
     }
@@ -63,7 +62,7 @@ public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContaine
         super.init();
 
         //配方名输入框
-        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 12, 80, 12, RECIPE_NAME.getString());//字体，位置，宽高，信息
+        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 15, 80, 12, RECIPE_NAME.getString());//字体，位置，宽高，信息
         this.recipeNameInput.setTextColor(-1);
         this.recipeNameInput.setDisabledTextColour(-1);
         this.recipeNameInput.setEnableBackgroundDrawing(false);
@@ -72,7 +71,7 @@ public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContaine
         this.recipeNameInput.setResponder(this::recipeNameinputResponder);//每次输入后的回调函数
         this.children.add(this.recipeNameInput);
         //组名输入框
-        this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 28, 80, 12, GROUP_NAME.getString());//字体，位置，宽高，信息
+        this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 31, 80, 12, GROUP_NAME.getString());//字体，位置，宽高，信息
         this.groupNameInput.setTextColor(-1);
         this.groupNameInput.setDisabledTextColour(-1);
         this.groupNameInput.setEnableBackgroundDrawing(false);
@@ -83,9 +82,8 @@ public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContaine
         //监听器
         this.container.addListener(this);
 
-
-        //添加按钮
-        this.confirmBtn = new Button(this.guiLeft - 80, this.guiTop + 40, 70, 20, ADD_RECIPE.getString(), (button) -> {
+        //按钮初始化
+        this.confirmBtn = new Button(this.guiLeft - 85, this.guiTop + 85, 80, 20, ADD_RECIPE.getString(), (button) -> {
             System.out.println("isCraftingSlotEmpty:"+isCraftingSlotEmpty);
             System.out.println("isGroupNameEmpty:"+ isGroupNameEmpty);
             System.out.println("isCraftingSlotEmpty:"+isCraftingSlotEmpty);
@@ -135,7 +133,6 @@ public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContaine
         if (this.groupNameInput.isHovered()&&!groupNameInput.isFocused()){
             this.renderTooltip(groupNameInputTooltips,mouseX,mouseY);
         }
-
     }
 
     public void tick() {
@@ -146,12 +143,10 @@ public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContaine
         for (int i = 1; i <= 9; i++) {
             if(!slots[i].getStack().isEmpty())isCraftingSlotEmpty = false;
         }
-
         String datapacks_dir_path = jsonPacket.getString("datapacks_dir_path");
         String player_name = jsonPacket.getString("player_name");
         File recipeJsonPath = new File(datapacks_dir_path + "//add_by_"+player_name+"//data//minecraft//recipes//" + recipeNameInput.getText() + ".json");
         isRecipeJsonExist = recipeJsonPath.exists();
-
         this.confirmBtn.active = !isResultSlotEmpty && !isCraftingSlotEmpty && !isRecipeNameEmpty && !isGroupNameEmpty && !isRecipeJsonExist;
     }
 
@@ -167,8 +162,7 @@ public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContaine
         if (p_keyPressed_1_ == 256) {
             this.minecraft.player.closeScreen();
         }
-
-        return this.recipeNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.recipeNameInput.canWrite() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return this.recipeNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.recipeNameInput.canWrite() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)||this.groupNameInput.canWrite()||this.groupNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
     }
 
 
@@ -178,22 +172,26 @@ public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContaine
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(CRAFTING_TABLE_TEXTURE);
-        int textureWidth = 176;
-        int textureHeight = 216;
+        int textureWidth = 300;
+        int textureHeight = 300;
         //背景渲染
         blit(guiLeft, guiTop, 0, 0, 176, 166, textureWidth, textureHeight);
+        //侧边栏背景渲染
+        blit(guiLeft - 98, guiTop + 4, 202, 0, 98, 107, textureWidth, textureHeight);
         //配方名输入框背景渲染
-        blit(guiLeft - 85, guiTop + 8, 0, 166 + (this.recipeNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
+        blit(guiLeft - 85, guiTop + 11, 0, 166 + (this.recipeNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
         //组名输入框背景渲染
-        blit(guiLeft - 85, guiTop + 24, 0, 166 + (this.groupNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
+        blit(guiLeft - 85, guiTop + 27, 0, 166 + (this.groupNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
+        //输入框placeholder
+        if (isRecipeNameEmpty)this.font.drawString(recipeNameInput.getMessage(),guiLeft - 82,guiTop + 14, 0xFFEEEEEE);
+        if (isGroupNameEmpty)this.font.drawString(recipeNameInput.getMessage(),guiLeft - 82,guiTop + 30,0xFFEEEEEE);
 
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        this.font.drawString(this.TITLE.getString(), 28.0F, 6.0F, 4210752);
-
+        this.font.drawString(this.title.getString(), 28.0F, 6.0F, 4210752);
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float)(this.ySize - 96 + 2), 4210752);
     }
 
     private void recipeNameinputResponder(String inputText) {
@@ -205,8 +203,10 @@ public class CraftingShapedScreen extends ContainerScreen<CraftingShapedContaine
 
     public void resize(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
         String s = this.recipeNameInput.getText();
+        String g = this.groupNameInput.getText();
         this.init(p_resize_1_, p_resize_2_, p_resize_3_);
         this.recipeNameInput.setText(s);
+        this.groupNameInput.setText(g);
     }
 
     @Override

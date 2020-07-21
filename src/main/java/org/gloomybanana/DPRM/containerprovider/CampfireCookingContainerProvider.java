@@ -9,6 +9,8 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.command.CampfireCookingCommand;
 import org.gloomybanana.DPRM.container.CampfireCookingContainer;
 
@@ -32,7 +34,7 @@ public class CampfireCookingContainerProvider implements INamedContainerProvider
 
     @Override
     public ITextComponent getDisplayName() {
-        return new StringTextComponent("DPRM Container Provider");
+        return new TranslationTextComponent("gui."+ DPRM.MOD_ID +".campfire_cooking.title");
     }
 
     public ServerPlayerEntity getServerPlayer() {

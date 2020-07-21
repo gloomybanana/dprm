@@ -9,13 +9,15 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.command.BlastingCommand;
 import org.gloomybanana.DPRM.container.BlastingContainer;
 import org.gloomybanana.DPRM.container.CraftingShapedContainer;
 
 import javax.annotation.Nullable;
 
-public class BlastingContainerProvider implements INamedContainerProvider {
+public class  BlastingContainerProvider implements INamedContainerProvider {
     private final ServerPlayerEntity serverPlayer;
 
     public BlastingContainerProvider(ServerPlayerEntity serverPlayer) {
@@ -34,7 +36,7 @@ public class BlastingContainerProvider implements INamedContainerProvider {
 
     @Override
     public ITextComponent getDisplayName() {
-        return new StringTextComponent("DPRM Container Provider");
+        return new TranslationTextComponent("gui."+ DPRM.MOD_ID +".blasting.title");
     }
 
     public ServerPlayerEntity getServerPlayer() {

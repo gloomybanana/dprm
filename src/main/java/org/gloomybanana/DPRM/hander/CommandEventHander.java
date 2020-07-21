@@ -40,18 +40,22 @@ public class CommandEventHander {
         LiteralArgumentBuilder<CommandSource> smoking = Commands.literal("smoking");
         smoking.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
         smoking.executes(SmokingCommand.instance);//命令功能
+        dprm.then(smoking);
         //命令节点"blasting"
         LiteralArgumentBuilder<CommandSource> blasting = Commands.literal("blasting");
         blasting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
         blasting.executes(BlastingCommand.instance);//命令功能
+        dprm.then(blasting);
         //命令节点"campfire_cooking"
         LiteralArgumentBuilder<CommandSource> campfire_cooking = Commands.literal("campfire_cooking");
         campfire_cooking.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
         campfire_cooking.executes(CampfireCookingCommand.instance);//命令功能
+        dprm.then(campfire_cooking);
         //命令节点"stonecutting"
         LiteralArgumentBuilder<CommandSource> stonecutting = Commands.literal("stonecutting");
         stonecutting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
         stonecutting.executes(StonecuttingCommand.instance);//命令功能
+        dprm.then(stonecutting);
         //命令节点"smithing"
         //TODO
 
