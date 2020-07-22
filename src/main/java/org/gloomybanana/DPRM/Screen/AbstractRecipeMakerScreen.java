@@ -35,6 +35,8 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
     TranslationTextComponent ADD_TO_DATAPACK = new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.add_to_datapack");//添加至数据包
     TranslationTextComponent PLEASE_COMPLETE_RECIPE_INFO = new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.please_complete_recipe_info");//完善配方信息
     TranslationTextComponent NAME_HAS_BEEN_USED = new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.name_has_been_used");//配方名已被使用
+    TranslationTextComponent EXPERIENCE = new TranslationTextComponent("gui."+ DPRM.MOD_ID+".furnace.experience");
+    TranslationTextComponent COOKING_TIME = new TranslationTextComponent("gui."+ DPRM.MOD_ID+".furnace.cooking_time");
 
     //组件
     TextFieldWidget recipeNameInput;//配方名输入组件
@@ -118,7 +120,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         if (p_keyPressed_1_ == 256) {
             this.minecraft.player.closeScreen();
         }
-        return this.recipeNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.recipeNameInput.canWrite() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)||this.groupNameInput.canWrite()||this.groupNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return !this.recipeNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) && !this.recipeNameInput.canWrite() && !this.groupNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) && !this.groupNameInput.canWrite()? super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) : true;
     }
 
     //渲染背景
@@ -137,8 +139,8 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         //组名输入框背景渲染
         blit(guiLeft - 85, guiTop + 27, 0, 166 + (this.groupNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
         //输入框placeholder
-        if (isRecipeNameEmpty)this.font.drawString(recipeNameInput.getMessage(),guiLeft - 82,guiTop + 14, 0xFFEEEEEE);
-        if (isGroupNameEmpty)this.font.drawString(groupNameInput.getMessage(),guiLeft - 82,guiTop + 30,0xFFEEEEEE);
+        if (isRecipeNameEmpty)this.font.drawString(recipeNameInput.getMessage(),guiLeft - 82,guiTop + 14, 0xFF777777);
+        if (isGroupNameEmpty)this.font.drawString(groupNameInput.getMessage(),guiLeft - 82,guiTop + 30,0xFF777777);
     }
     //渲染GUI内静态文字
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {

@@ -44,7 +44,7 @@ public class CraftingShapedScreen extends AbstractRecipeMakerScreen<CraftingShap
         }else {
             playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")));
         }
-        this.minecraft.player.closeScreen();
+//        this.minecraft.player.closeScreen();
     }
 
     public void tick() {

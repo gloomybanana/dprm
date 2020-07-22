@@ -24,5 +24,6 @@ public class CraftingShapedCommand implements Command<CommandSource> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;
+
     }
 }

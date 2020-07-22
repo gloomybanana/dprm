@@ -64,6 +64,6 @@ public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingCo
         }else {
             playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")));
         }
-        this.minecraft.player.closeScreen();
+//        this.minecraft.player.closeScreen();
     }
 }

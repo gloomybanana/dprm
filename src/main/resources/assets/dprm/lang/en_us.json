@@ -13,5 +13,7 @@
   "gui.dprm.recipe_info.please_complete_recipe_info": "please complete recipe info",
   "gui.dprm.recipe_info.name_has_been_used": "name existed",
   "gui.dprm.chat.recipe_generate_successed": "recipe generate successed! path: %s\n",
-  "gui.dprm.chat.recipe_generate_failed": "recipe generate failed!"
+  "gui.dprm.chat.recipe_generate_failed": "recipe generate failed!",
+  "gui.dprm.furnance.experience": "experience",
+  "gui.dprm.furnance.cooking_time": "cooking time"
 }

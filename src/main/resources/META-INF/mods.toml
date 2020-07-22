@@ -6,7 +6,7 @@ modId="dprm"
 version="${file.jarVersion}"
 displayName="Datapack Recipe Maker"
 displayURL="https://github.com/gloomybanana/dprm"
-logoFile="dprm.png"
+logoFile="logo.png"
 authors="gloomybanana"
 description='''
 this is an assistant tool designed for making vanilla datapack recipe.you can generate a vanilla recipe in you game world by drag item into craft table gui.

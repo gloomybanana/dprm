@@ -13,5 +13,7 @@
   "gui.dprm.recipe_info.please_complete_recipe_info": "请完善配方信息",
   "gui.dprm.recipe_info.name_has_been_used": "配方名已存在",
   "gui.dprm.chat.recipe_generate_successed": "成功创建配方!路径:%s\n",
-  "gui.dprm.chat.recipe_generate_failed": "创建配方失败."
+  "gui.dprm.chat.recipe_generate_failed": "创建配方失败.",
+  "gui.dprm.furnance.experience": "经验",
+  "gui.dprm.furnance.cooking_time": "烧制耗时"
 }
