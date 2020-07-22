@@ -16,11 +16,7 @@ public class CommandEventHander {
         //命令节点"dprm"
         LiteralArgumentBuilder<CommandSource> dprm = Commands.literal("dprm");//新建节点名
         dprm.requires((commandSource)-> commandSource.hasPermissionLevel(0));//设置为一般玩家权限
-        //命令节点"menu"
-        LiteralArgumentBuilder<CommandSource> menu = Commands.literal("menu");//新建节点名
-        menu.requires((commandSource)-> commandSource.hasPermissionLevel(0));//设置为一般玩家权限
-        menu.executes(MenuScreenCommand.instance);
-        dprm.then(menu);//绑定到"dprm"节点上
+        dprm.executes(MenuScreenCommand.instance);
         //命令节点"crafting_shaped"
         LiteralArgumentBuilder<CommandSource> crafting_shaped = Commands.literal("crafting_shaped");//新建节点名
         crafting_shaped.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限

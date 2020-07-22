@@ -1,19 +1,17 @@
 {
+  "gui.dprm.blasting.title": "高炉",
+  "gui.dprm.campfire_cooking.title": "营火",
   "gui.dprm.crafting_shaped.title": "有序合成",
-  "gui.dprm.crafting_shaped.recipe_name": "配方名",
-  "gui.dprm.crafting_shaped.group_name": "组名",
-  "gui.dprm.crafting_shaped.add_recipe": "添加合成",
-  "gui.dprm.crafting_shaped.add_to_datapack": "添加至数据包",
-  "gui.dprm.crafting_shaped.please_complete_recipe_info": "请完善配方信息",
-  "gui.dprm.crafting_shaped.recipe_generate_successed": "成功创建配方!路径:%s\n",
-  "gui.dprm.crafting_shaped.recipe_generate_failed": "创建配方失败.",
-
   "gui.dprm.crafting_shapeless.title": "无序合成",
-  "gui.dprm.crafting_shapeless.recipe_name": "配方名",
-  "gui.dprm.crafting_shapeless.group_name": "组名",
-  "gui.dprm.crafting_shapeless.add_recipe": "添加合成",
-  "gui.dprm.crafting_shapeless.add_to_datapack": "添加至数据包",
-  "gui.dprm.crafting_shapeless.please_complete_recipe_info": "请完善配方信息",
-  "gui.dprm.crafting_shapeless.recipe_generate_successed": "成功创建配方!路径:%s\n",
-  "gui.dprm.crafting_shapeless.recipe_generate_failed": "创建配方失败."
+  "gui.dprm.smelting.title": "熔炉",
+  "gui.dprm.smoking.title": "烟熏",
+  "gui.dprm.stonecutting.title": "切割",
+  "gui.dprm.recipe_info.recipe_name": "配方名",
+  "gui.dprm.recipe_info.group_name": "组名",
+  "gui.dprm.recipe_info.add_recipe": "添加合成",
+  "gui.dprm.recipe_info.add_to_datapack": "添加至数据包",
+  "gui.dprm.recipe_info.please_complete_recipe_info": "请完善配方信息",
+  "gui.dprm.recipe_info.name_has_been_used": "配方名已存在",
+  "gui.dprm.chat.recipe_generate_successed": "成功创建配方!路径:%s\n",
+  "gui.dprm.chat.recipe_generate_failed": "创建配方失败."
 }

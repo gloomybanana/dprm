@@ -122,9 +122,17 @@ public class JsonManager {
      * @param groupName group名
      * @return 熔炉配方json
      */
-    public static JSONObject genSmeltingRecipe(Slot[] slots, String groupName){
-        //TODO
-        return null;
+    public static JSONObject genSmeltingRecipe(Slot[] slots, String groupName,Double experience,Integer cookingtime){
+        JSONObject smeltingRecipe = new JSONObject(true);
+        smeltingRecipe.put("type","smelting");
+        smeltingRecipe.put("group",groupName);
+         JSONObject ingredient = new JSONObject(true);
+         ingredient.put("item",slots[1].getStack().getItem().getRegistryName().toString());
+        smeltingRecipe.put("ingredient",ingredient);
+        smeltingRecipe.put("result",slots[0].getStack().getItem().getRegistryName().toString());
+        smeltingRecipe.put("experience",experience);
+        smeltingRecipe.put("cookingtime",cookingtime);
+        return smeltingRecipe;
     }
 
     /**
@@ -133,9 +141,17 @@ public class JsonManager {
      * @param groupName group名
      * @return 高炉配方json
      */
-    public static JSONObject genBlastingRecipe(Slot[] slots,String groupName){
-        //TODO
-        return null;
+    public static JSONObject genBlastingRecipe(Slot[] slots,String groupName,Double experience,Integer cookingtime){
+        JSONObject blastingRecipe = new JSONObject(true);
+        blastingRecipe.put("type","blasting");
+        blastingRecipe.put("group",groupName);
+        JSONObject ingredient = new JSONObject(true);
+        ingredient.put("item",slots[1].getStack().getItem().getRegistryName().toString());
+        blastingRecipe.put("ingredient",ingredient);
+        blastingRecipe.put("result",slots[0].getStack().getItem().getRegistryName().toString());
+        blastingRecipe.put("experience",experience);
+        blastingRecipe.put("cookingtime",cookingtime);
+        return blastingRecipe;
     }
 
     /**
@@ -144,9 +160,17 @@ public class JsonManager {
      * @param groupName group名
      * @return 营火配方json
      */
-    public static JSONObject genCampfireCookingRecipe(Slot[] slots,String groupName){
-        //TODO
-        return null;
+    public static JSONObject genCampfireCookingRecipe(Slot[] slots,String groupName,Double experience,Integer cookingtime){
+        JSONObject campfireCookingRecipe = new JSONObject(true);
+        campfireCookingRecipe.put("type","campfire_cooking");
+        campfireCookingRecipe.put("group",groupName);
+        JSONObject ingredient = new JSONObject(true);
+        ingredient.put("item",slots[1].getStack().getItem().getRegistryName().toString());
+        campfireCookingRecipe.put("ingredient",ingredient);
+        campfireCookingRecipe.put("result",slots[0].getStack().getItem().getRegistryName().toString());
+        campfireCookingRecipe.put("experience",experience);
+        campfireCookingRecipe.put("cookingtime",cookingtime);
+        return campfireCookingRecipe;
     }
 
     /**
@@ -155,9 +179,17 @@ public class JsonManager {
      * @param groupName group名
      * @return 烟熏配方json
      */
-    public static JSONObject genSmokingRecipe(Slot[] slots,String groupName){
-        //TODO
-        return null;
+    public static JSONObject genSmokingRecipe(Slot[] slots,String groupName,Double experience,Integer cookingtime){
+        JSONObject smokingRecipe = new JSONObject(true);
+        smokingRecipe.put("type","smoking");
+        smokingRecipe.put("group",groupName);
+        JSONObject ingredient = new JSONObject(true);
+        ingredient.put("item",slots[1].getStack().getItem().getRegistryName().toString());
+        smokingRecipe.put("ingredient",ingredient);
+        smokingRecipe.put("result",slots[0].getStack().getItem().getRegistryName().toString());
+        smokingRecipe.put("experience",experience);
+        smokingRecipe.put("cookingtime",cookingtime);
+        return smokingRecipe;
     }
 
     /**
@@ -167,8 +199,15 @@ public class JsonManager {
      * @return 切石机配方json
      */
     public static JSONObject genStonecuttingRecipe(Slot[] slots,String groupName){
-        //TODO
-        return null;
+        JSONObject stonecuttingRecipe = new JSONObject(true);
+        stonecuttingRecipe.put("type","stonecutting");
+        stonecuttingRecipe.put("group",groupName);
+        JSONObject ingredient = new JSONObject(true);
+        ingredient.put("item",slots[1].getStack().getItem().getRegistryName().toString());
+        stonecuttingRecipe.put("ingredient",ingredient);
+        stonecuttingRecipe.put("result",slots[0].getStack().getItem().getRegistryName().toString());
+        stonecuttingRecipe.put("count",slots[0].getStack().getCount());
+        return stonecuttingRecipe;
     }
 
     /**
