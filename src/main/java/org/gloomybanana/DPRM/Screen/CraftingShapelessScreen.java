@@ -59,11 +59,14 @@ public class CraftingShapelessScreen extends AbstractRecipeMakerScreen<CraftingS
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks,mouseX,mouseY);
+
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX,mouseY);
+        this.minecraft.getTextureManager().bindTexture(SCREEN_TEXTURE);
+        blit(88, 28, 0, 198,28, 28, textureWidth, textureHeight);
         this.font.drawString(this.title.getString(), 28.0F, 6.0F, 4210752);
     }
 

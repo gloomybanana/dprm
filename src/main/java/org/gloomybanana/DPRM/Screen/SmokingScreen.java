@@ -16,6 +16,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.SmokingContainer;
 import org.gloomybanana.DPRM.file.JsonManager;
+import org.lwjgl.glfw.GLFW;
 
 public class SmokingScreen extends AbstractRecipeMakerScreen<SmokingContainer>{
 
@@ -37,7 +38,7 @@ public class SmokingScreen extends AbstractRecipeMakerScreen<SmokingContainer>{
     protected void init() {
         super.init();
         //经验
-        this.experienceInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 47, 24, 12, EXPERIENCE.getString());
+        this.experienceInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 47, 24, 12, EXPERIENCE);
         this.experienceInput.setCanLoseFocus(true);
         this.experienceInput.setTextColor(-1);
         this.experienceInput.setDisabledTextColour(0x808080);
@@ -47,7 +48,7 @@ public class SmokingScreen extends AbstractRecipeMakerScreen<SmokingContainer>{
         experienceInput.setText("0.35");
         this.children.add(this.experienceInput);
         //时间
-        this.cookingTimeInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 63, 24, 12,COOKING_TIME.getString() );
+        this.cookingTimeInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 63, 24, 12,COOKING_TIME );
         this.cookingTimeInput.setCanLoseFocus(true);
         this.cookingTimeInput.setTextColor(-1);
         this.cookingTimeInput.setDisabledTextColour(0x808080);
@@ -121,5 +122,16 @@ public class SmokingScreen extends AbstractRecipeMakerScreen<SmokingContainer>{
             playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")));
         }
 //        this.minecraft.player.closeScreen();
+    }
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            this.minecraft.player.closeScreen();
+        }
+        return this.recipeNameInput.keyPressed(keyCode, scanCode, modifier) || this.recipeNameInput.canWrite()
+                || this.groupNameInput.keyPressed(keyCode, scanCode, modifier) || this.groupNameInput.canWrite()
+                || this.experienceInput.keyPressed(keyCode, scanCode, modifier) || this.experienceInput.canWrite()
+                || this.cookingTimeInput.keyPressed(keyCode, scanCode, modifier) || this.cookingTimeInput.canWrite()
+                || super.keyPressed(keyCode, scanCode, modifier);
     }
 }

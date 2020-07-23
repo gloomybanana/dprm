@@ -40,7 +40,7 @@ public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingCo
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks,mouseX,mouseY);
         //切石机
-        this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(Items.STONECUTTER),guiLeft+75,guiTop+33);
+        this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(Items.STONECUTTER),guiLeft+79,guiTop+33);
     }
 
     @Override

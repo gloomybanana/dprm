@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
@@ -17,6 +18,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.AbstractRecipeContainer;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,14 +31,14 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
     protected final Integer textureHeight = 300;
 
     //gui本地化
-    TranslationTextComponent RECIPE_NAME = new TranslationTextComponent("gui."+ DPRM.MOD_ID+".recipe_info.recipe_name");//配方名
-    TranslationTextComponent GROUP_NAME = new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.group_name");//组名
-    TranslationTextComponent ADD_RECIPE = new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.add_recipe");//添加配方
-    TranslationTextComponent ADD_TO_DATAPACK = new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.add_to_datapack");//添加至数据包
-    TranslationTextComponent PLEASE_COMPLETE_RECIPE_INFO = new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.please_complete_recipe_info");//完善配方信息
-    TranslationTextComponent NAME_HAS_BEEN_USED = new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.name_has_been_used");//配方名已被使用
-    TranslationTextComponent EXPERIENCE = new TranslationTextComponent("gui."+ DPRM.MOD_ID+".furnace.experience");
-    TranslationTextComponent COOKING_TIME = new TranslationTextComponent("gui."+ DPRM.MOD_ID+".furnace.cooking_time");
+    String RECIPE_NAME = I18n.format("gui."+ DPRM.MOD_ID+".recipe_info.recipe_name");//配方名
+    String GROUP_NAME = I18n.format("gui."+DPRM.MOD_ID+".recipe_info.group_name");//组名
+    String ADD_RECIPE = I18n.format("gui."+DPRM.MOD_ID+".recipe_info.add_recipe");//添加配方
+    String ADD_TO_DATAPACK = I18n.format("gui."+DPRM.MOD_ID+".recipe_info.add_to_datapack");//添加至数据包
+    String PLEASE_COMPLETE_RECIPE_INFO = I18n.format("gui."+DPRM.MOD_ID+".recipe_info.please_complete_recipe_info");//完善配方信息
+    String NAME_HAS_BEEN_USED = I18n.format("gui."+DPRM.MOD_ID+".recipe_info.name_has_been_used");//配方名已被使用
+    String EXPERIENCE = I18n.format("gui."+DPRM.MOD_ID+".furnance.experience");
+    String COOKING_TIME =I18n.format("gui."+DPRM.MOD_ID+".furnance.cooking_time");
 
     //组件
     TextFieldWidget recipeNameInput;//配方名输入组件
@@ -58,7 +60,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
     protected void init() {
         super.init();
         //配方名输入框
-        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 15, 80, 12, RECIPE_NAME.getString());//字体，位置，宽高，信息
+        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 15, 80, 12, RECIPE_NAME);//字体，位置，宽高，信息
         this.recipeNameInput.setTextColor(-1);
         this.recipeNameInput.setDisabledTextColour(-1);
         this.recipeNameInput.setEnableBackgroundDrawing(false);
@@ -67,7 +69,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.recipeNameInput.setResponder(this::recipeNameinputResponder);//每次输入后的回调函数
         this.children.add(this.recipeNameInput);
         //组名输入框
-        this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 31, 80, 12, GROUP_NAME.getString());//字体，位置，宽高，信息
+        this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 31, 80, 12, GROUP_NAME);//字体，位置，宽高，信息
         this.groupNameInput.setTextColor(-1);
         this.groupNameInput.setDisabledTextColour(-1);
         this.groupNameInput.setEnableBackgroundDrawing(false);
@@ -79,7 +81,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.container.addListener(this);
 
         //按钮初始化
-        this.confirmBtn = new Button(this.guiLeft - 85, this.guiTop + 85, 80, 20, ADD_RECIPE.getString(), this::onConfirmBtnPress);//位置，宽高，文字，按下后回调函数
+        this.confirmBtn = new Button(this.guiLeft - 85, this.guiTop + 85, 80, 20, ADD_RECIPE, this::onConfirmBtnPress);//位置，宽高，文字，按下后回调函数
         this.addButton(confirmBtn);//添加到Screen
     }
     public void tick() {
@@ -90,9 +92,9 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         File recipeJsonPath = new File(datapacks_dir_path + "//add_by_"+player_name+"//data//minecraft//recipes//" + recipeNameInput.getText() + ".json");
         isRecipeJsonExist = recipeJsonPath.exists();
         if (isRecipeJsonExist) {
-            this.confirmBtn.setMessage(NAME_HAS_BEEN_USED.getString());
+            this.confirmBtn.setMessage(NAME_HAS_BEEN_USED);
         } else {
-            this.confirmBtn.setMessage(ADD_RECIPE.getString());
+            this.confirmBtn.setMessage(ADD_RECIPE);
         }
     }
     private void recipeNameinputResponder(String inputText) {
@@ -116,11 +118,13 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.groupNameInput.setText(g);
     }
     //关闭除Esc以及文字输入之外的其他键盘按键触发事件
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (p_keyPressed_1_ == 256) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             this.minecraft.player.closeScreen();
         }
-        return !this.recipeNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) && !this.recipeNameInput.canWrite() && !this.groupNameInput.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) && !this.groupNameInput.canWrite()? super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) : true;
+        return this.recipeNameInput.keyPressed(keyCode, scanCode, modifier) || this.recipeNameInput.canWrite()
+            || this.groupNameInput.keyPressed(keyCode, scanCode, modifier) || this.groupNameInput.canWrite()
+            || super.keyPressed(keyCode, scanCode, modifier);
     }
 
     //渲染背景
@@ -158,8 +162,8 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.renderHoveredToolTip(mouseX, mouseY);
         ArrayList<String> confirmBtnActiveToolTips = new ArrayList<>();
         ArrayList<String> confirmBtnDisableToolTips = new ArrayList<>();
-        confirmBtnActiveToolTips.add(ADD_TO_DATAPACK.getFormattedText());
-        confirmBtnDisableToolTips.add(PLEASE_COMPLETE_RECIPE_INFO.getFormattedText());
+        confirmBtnActiveToolTips.add(ADD_TO_DATAPACK);
+        confirmBtnDisableToolTips.add(PLEASE_COMPLETE_RECIPE_INFO);
         if (this.confirmBtn.isHovered()&&!groupNameInput.isFocused()){
             if(this.confirmBtn.active){
                 this.renderTooltip(confirmBtnActiveToolTips,mouseX,mouseY);

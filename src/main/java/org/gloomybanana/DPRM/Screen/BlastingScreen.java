@@ -19,6 +19,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.BlastingContainer;
 import org.gloomybanana.DPRM.file.JsonManager;
+import org.lwjgl.glfw.GLFW;
 
 public class BlastingScreen extends AbstractRecipeMakerScreen<BlastingContainer>{
     Boolean isResultSlotEmpty = true;
@@ -37,7 +38,7 @@ public class BlastingScreen extends AbstractRecipeMakerScreen<BlastingContainer>
         //侧边栏组件初始化
         super.init();
         //经验
-        this.experienceInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 47, 24, 12, EXPERIENCE.getString());
+        this.experienceInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 47, 24, 12, EXPERIENCE);
         this.experienceInput.setCanLoseFocus(true);
         this.experienceInput.setTextColor(-1);
         this.experienceInput.setDisabledTextColour(0x808080);
@@ -47,7 +48,7 @@ public class BlastingScreen extends AbstractRecipeMakerScreen<BlastingContainer>
         experienceInput.setText("0.35");
         this.children.add(this.experienceInput);
         //时间
-        this.cookingTimeInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 63, 24, 12,COOKING_TIME.getString() );
+        this.cookingTimeInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 63, 24, 12,COOKING_TIME);
         this.cookingTimeInput.setCanLoseFocus(true);
         this.cookingTimeInput.setTextColor(-1);
         this.cookingTimeInput.setDisabledTextColour(0x808080);
@@ -98,8 +99,8 @@ public class BlastingScreen extends AbstractRecipeMakerScreen<BlastingContainer>
         blit( guiLeft - 85,  guiTop + 43, 0, 198, 24, 15, textureWidth, textureHeight);
         blit( guiLeft - 85,  guiTop + 59, 0, 198, 24, 15, textureWidth, textureHeight);
         //经验,时间文字
-        this.font.drawString(I18n.format("gui.dprm.furnance.experience"), guiLeft-59, guiTop+46, 0xFF222222);
-        this.font.drawString(I18n.format("gui.dprm.furnance.cooking_time"), guiLeft-59, guiTop+62,0xFF222222);
+        this.font.drawString(EXPERIENCE, guiLeft-59, guiTop+46, 0xFF222222);
+        this.font.drawString(COOKING_TIME, guiLeft-59, guiTop+62,0xFF222222);
         //高炉图标
         this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(Items.BLAST_FURNACE),guiLeft+56,guiTop+54);
 
@@ -120,15 +121,32 @@ public class BlastingScreen extends AbstractRecipeMakerScreen<BlastingContainer>
     }
     @Override
     public void onConfirmBtnPress(Button button) {
-        Ints.tryParse(cookingTimeInput.getText());
-        Doubles.tryParse(experienceInput.getText());
         JSONObject blastingRecipe = JsonManager.genBlastingRecipe(container.furnaceSlots, groupNameInput.getText(),Doubles.tryParse(experienceInput.getText()),Ints.tryParse(cookingTimeInput.getText()));
+
+        JSONObject sendToServer = new JSONObject(true);
+        sendToServer.put("jsonPackt",jsonPacket);
+        sendToServer.put("json_recipe",blastingRecipe);
+        sendToServer.put("recipe_name",recipeNameInput.getText());
+
+
+
         JSONObject result = JsonManager.createJsonFile(jsonPacket,blastingRecipe,recipeNameInput.getText());
         if (result.getBoolean("success")){
             playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_successed",result.getString("dir")));
         }else {
             playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")));
         }
-//        this.minecraft.player.closeScreen();
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            this.minecraft.player.closeScreen();
+        }
+        return this.recipeNameInput.keyPressed(keyCode, scanCode, modifier) || this.recipeNameInput.canWrite()
+                || this.groupNameInput.keyPressed(keyCode, scanCode, modifier) || this.groupNameInput.canWrite()
+                || this.experienceInput.keyPressed(keyCode, scanCode, modifier) || this.experienceInput.canWrite()
+                || this.cookingTimeInput.keyPressed(keyCode, scanCode, modifier) || this.cookingTimeInput.canWrite()
+                || super.keyPressed(keyCode, scanCode, modifier);
     }
 }
