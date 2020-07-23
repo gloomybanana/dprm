@@ -22,6 +22,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extends ContainerScreen<T> implements IContainerListener {
     protected final T container;

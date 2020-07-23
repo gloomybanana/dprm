@@ -19,6 +19,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.BlastingContainer;
 import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.network.Networking;
+import org.gloomybanana.DPRM.network.SendRecipePack;
 import org.lwjgl.glfw.GLFW;
 
 public class BlastingScreen extends AbstractRecipeMakerScreen<BlastingContainer>{
@@ -123,19 +125,20 @@ public class BlastingScreen extends AbstractRecipeMakerScreen<BlastingContainer>
     public void onConfirmBtnPress(Button button) {
         JSONObject blastingRecipe = JsonManager.genBlastingRecipe(container.furnaceSlots, groupNameInput.getText(),Doubles.tryParse(experienceInput.getText()),Ints.tryParse(cookingTimeInput.getText()));
 
-        JSONObject sendToServer = new JSONObject(true);
-        sendToServer.put("jsonPackt",jsonPacket);
-        sendToServer.put("json_recipe",blastingRecipe);
-        sendToServer.put("recipe_name",recipeNameInput.getText());
+        JSONObject recipeJsonData = new JSONObject(true);
+        recipeJsonData.put("jsonPacket",jsonPacket);
+        recipeJsonData.put("json_recipe",blastingRecipe);
+        recipeJsonData.put("recipe_name",recipeNameInput.getText());
 
+        Networking.INSTANCE.sendToServer(new SendRecipePack(recipeJsonData.toJSONString()));
 
-
-        JSONObject result = JsonManager.createJsonFile(jsonPacket,blastingRecipe,recipeNameInput.getText());
-        if (result.getBoolean("success")){
-            playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_successed",result.getString("dir")));
-        }else {
-            playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")));
-        }
+//        JSONObject result = JsonManager.createJsonFile(jsonPacket,blastingRecipe,recipeNameInput.getText());
+//        if (result.getBoolean("success")){
+//            playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_successed",result.getString("dir")));
+//        }else {
+//            playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")));
+//        }
+        this.minecraft.player.closeScreen();
     }
 
     @Override

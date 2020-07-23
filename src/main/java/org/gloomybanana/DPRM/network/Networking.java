@@ -21,10 +21,10 @@ public class Networking {
         //注册数据包
         INSTANCE.registerMessage(
                 nextID(),//数据包序号
-                SendPack.class,//我们要自定义数据包的类
-                SendPack::toBytes,//序列化我们的数据包
-                SendPack::new,//反序列化数据包
-                SendPack::handler//接受到数据之后的回调函数
+                SendRecipePack.class,//我们要自定义数据包的类
+                SendRecipePack::toBytes,//序列化我们的数据包
+                SendRecipePack::new,//反序列化数据包
+                SendRecipePack::handler//接受到数据之后的回调函数
         );
     }
 }

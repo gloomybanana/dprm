@@ -10,8 +10,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.gloomybanana.DPRM.Screen.*;
 import org.gloomybanana.DPRM.container.*;
+import org.gloomybanana.DPRM.network.Networking;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public class ModEventHander {
@@ -25,6 +27,10 @@ public class ModEventHander {
         ScreenManager.registerFactory(Registry.campfireCookingContainer.get(), CampfireCookingScreen::new);
         ScreenManager.registerFactory(Registry.stonecuttingContainer.get(), StonecuttingScreen::new);
 
+    }
+    @SubscribeEvent
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
+        Networking.registerMessage();
     }
 
 }
