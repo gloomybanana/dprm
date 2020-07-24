@@ -16,28 +16,15 @@ import org.gloomybanana.DPRM.container.StonecuttingContainer;
 import javax.annotation.Nullable;
 
 public class StonecuttingContainerProvider implements INamedContainerProvider {
-    private final ServerPlayerEntity serverPlayer;
-
-    public StonecuttingContainerProvider(ServerPlayerEntity serverPlayer) {
-        this.serverPlayer = serverPlayer;
-    }
-
     @Nullable
     @Override
     public Container createMenu(int sycID, PlayerInventory playerInventory, PlayerEntity player) {
-        String playerName = serverPlayer.getName().getFormattedText();
-        String recipePath = serverPlayer.getServerWorld().getSaveHandler().getWorldDirectory().getPath() + "\\datapacks\\add_by_" + playerName + "\\data\\minecraft\\recipes";
-        PacketBuffer packetBuffer = new PacketBuffer(Unpooled.buffer()).writeString(recipePath);
-
+        PacketBuffer packetBuffer = new PacketBuffer(Unpooled.buffer());
         return new StonecuttingContainer(sycID,playerInventory,packetBuffer);
     }
 
     @Override
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent("gui."+ DPRM.MOD_ID +".stonecutting.title");
-    }
-
-    public ServerPlayerEntity getServerPlayer() {
-        return serverPlayer;
     }
 }

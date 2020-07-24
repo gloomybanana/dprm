@@ -1,20 +1,20 @@
 package org.gloomybanana.DPRM.container;
 
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.network.PacketBuffer;
 import org.gloomybanana.DPRM.hander.Registry;
 
-public class CampfireCookingContainer extends AbstractRecipeContainer {
+public class FurnaceContainer extends AbstractRecipeContainer {
     public CraftingInventory craftMatrix = new SingleSlot(this, 3, 3);
     public IInventory craftResult = new SingleSlot(this,3,3);
     public Slot[] furnaceSlots = new Slot[2];
 
-    public CampfireCookingContainer(int sycID, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
-        super(Registry.campfireCookingContainer.get(),sycID,playerInventory,packetBuffer);
+    public FurnaceContainer(int sycID, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
+        super(Registry.furnaceContainer.get(),sycID,playerInventory,packetBuffer);
+
         //烧制物品插槽
         furnaceSlots[1] = this.addSlot(new Slot(this.craftMatrix, 0, 56, 17));
         //产物插槽

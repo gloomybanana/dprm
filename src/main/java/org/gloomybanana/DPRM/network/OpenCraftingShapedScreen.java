@@ -11,21 +11,22 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.gloomybanana.DPRM.DPRM;
+import org.gloomybanana.DPRM.containerprovider.CraftingShapedContainerProvider;
 import org.gloomybanana.DPRM.containerprovider.RecipeListContainerProvider;
 import org.gloomybanana.DPRM.file.JsonManager;
 
 import java.util.function.Supplier;
 
-public class SendRecipePack {
+public class OpenCraftingShapedScreen {
     private String jsonString;
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public SendRecipePack(PacketBuffer buffer) {
+    public OpenCraftingShapedScreen(PacketBuffer buffer) {
         jsonString = buffer.readString();
     }
 
     //反序列化
-    public SendRecipePack(String jsonString) {
+    public OpenCraftingShapedScreen(String jsonString) {
         this.jsonString = jsonString;
     }
 
@@ -38,6 +39,7 @@ public class SendRecipePack {
         ctx.get().enqueueWork(() -> {
             LOGGER.info(this.jsonString);
         });
+
         ServerPlayerEntity serverPlayer = null;
         try {
             serverPlayer = ctx.get().getSender().getCommandSource().asPlayer();
@@ -47,17 +49,8 @@ public class SendRecipePack {
 
         JSONObject recipeJson = JSON.parseObject(jsonString);
         JSONObject jsonPacket = recipeJson.getJSONObject("jsonPacket");
-        JSONObject json_recipe = recipeJson.getJSONObject("json_recipe");
-        String recipe_name = recipeJson.getString("recipe_name");
 
-        JSONObject result = JsonManager.createJsonFile(jsonPacket,json_recipe,recipe_name);
-        if (result.getBoolean("success")){
-            serverPlayer.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_successed",result.getString("dir")));
-        }else {
-            serverPlayer.sendMessage(new TranslationTextComponent("gui."+ DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")));
-        }
-
-        NetworkHooks.openGui(serverPlayer,new RecipeListContainerProvider(), (PacketBuffer packetBuffer) -> {
+        NetworkHooks.openGui(serverPlayer,new CraftingShapedContainerProvider(), (PacketBuffer packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         ctx.get().setPacketHandled(true);

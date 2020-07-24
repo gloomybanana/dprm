@@ -16,7 +16,7 @@ public class CommandEventHander {
         //命令节点"dprm"
         LiteralArgumentBuilder<CommandSource> dprm = Commands.literal("dprm");//新建节点名
         dprm.requires((commandSource)-> commandSource.hasPermissionLevel(0));//设置为一般玩家权限
-        dprm.executes(MenuScreenCommand.instance);
+        dprm.executes(RecipeListCommand.instance);
         //命令节点"crafting_shaped"
         LiteralArgumentBuilder<CommandSource> crafting_shaped = Commands.literal("crafting_shaped");//新建节点名
         crafting_shaped.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
@@ -27,26 +27,11 @@ public class CommandEventHander {
         crafting_shapeless.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
         crafting_shapeless.executes(CraftingShapelessCommand.instance);//命令功能
         dprm.then(crafting_shapeless);//绑定到"dprm"节点上
-        //命令节点"smelting"
-        LiteralArgumentBuilder<CommandSource> smelting = Commands.literal("smelting");//新建节点名
-        smelting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
-        smelting.executes(SmeltingCommand.instance);//命令功能
-        dprm.then(smelting);
-        //命令节点"smoking"
-        LiteralArgumentBuilder<CommandSource> smoking = Commands.literal("smoking");
-        smoking.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
-        smoking.executes(SmokingCommand.instance);//命令功能
-        dprm.then(smoking);
-        //命令节点"blasting"
-        LiteralArgumentBuilder<CommandSource> blasting = Commands.literal("blasting");
+        //命令节点"furnace"
+        LiteralArgumentBuilder<CommandSource> blasting = Commands.literal("furnace");
         blasting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
-        blasting.executes(BlastingCommand.instance);//命令功能
+        blasting.executes(FurnaceCommand.instance);//命令功能
         dprm.then(blasting);
-        //命令节点"campfire_cooking"
-        LiteralArgumentBuilder<CommandSource> campfire_cooking = Commands.literal("campfire_cooking");
-        campfire_cooking.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
-        campfire_cooking.executes(CampfireCookingCommand.instance);//命令功能
-        dprm.then(campfire_cooking);
         //命令节点"stonecutting"
         LiteralArgumentBuilder<CommandSource> stonecutting = Commands.literal("stonecutting");
         stonecutting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限

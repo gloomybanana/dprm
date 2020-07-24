@@ -26,6 +26,21 @@ public class Networking {
                 SendRecipePack::new,//反序列化数据包
                 SendRecipePack::handler//接受到数据之后的回调函数
         );
+        INSTANCE.registerMessage(
+                nextID(),//数据包序号
+                OpenCraftingShapedScreen.class,//我们要自定义数据包的类
+                OpenCraftingShapedScreen::toBytes,//序列化我们的数据包
+                OpenCraftingShapedScreen::new,//反序列化数据包
+                OpenCraftingShapedScreen::handler//接受到数据之后的回调函数
+        );
+        INSTANCE.registerMessage(
+                nextID(),//数据包序号
+                OpenFurnaceScreen.class,//我们要自定义数据包的类
+                OpenFurnaceScreen::toBytes,//序列化我们的数据包
+                OpenFurnaceScreen::new,//反序列化数据包
+                OpenFurnaceScreen::handler//接受到数据之后的回调函数
+        );
+
     }
 }
 

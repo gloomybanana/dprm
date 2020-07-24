@@ -20,7 +20,7 @@ public class CraftingShapedCommand implements Command<CommandSource> {
         jsonPacket.put("player_name",serverPlayer.getName().getFormattedText());
         jsonPacket.put("datapacks_dir_path",datapacksDirPath);
 
-        NetworkHooks.openGui(serverPlayer,new CraftingShapedContainerProvider(serverPlayer), (packetBuffer) -> {
+        NetworkHooks.openGui(serverPlayer,new CraftingShapedContainerProvider(), (packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;

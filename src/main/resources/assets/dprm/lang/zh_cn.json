@@ -5,6 +5,7 @@
   "gui.dprm.crafting_shapeless.title": "无序合成",
   "gui.dprm.smelting.title": "熔炉",
   "gui.dprm.smoking.title": "烟熏",
+  "gui.dprm.furnace.toggle": "切换熔炉类型",
   "gui.dprm.stonecutting.title": "切割",
   "gui.dprm.recipe_info.recipe_name": "配方名",
   "gui.dprm.recipe_info.group_name": "组名",

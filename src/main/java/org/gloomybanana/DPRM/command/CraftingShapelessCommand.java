@@ -21,7 +21,7 @@ public class CraftingShapelessCommand implements Command<CommandSource> {
         jsonPacket.put("datapacks_dir_path",datapacksDirPath);
 
         int currentWindowId = context.getSource().asPlayer().currentWindowId;
-        NetworkHooks.openGui(serverPlayer,new CraftingShapelessContainerProvider(serverPlayer), (packetBuffer) -> {
+        NetworkHooks.openGui(serverPlayer,new CraftingShapelessContainerProvider(), (packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;

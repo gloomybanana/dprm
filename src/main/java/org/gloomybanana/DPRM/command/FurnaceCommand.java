@@ -8,13 +8,12 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.gloomybanana.DPRM.containerprovider.BlastingContainerProvider;
-import org.gloomybanana.DPRM.containerprovider.SmeltingContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.FurnaceContainerProvider;
 
 import java.io.File;
 
-public class BlastingCommand implements Command<CommandSource> {
-    public static BlastingCommand instance = new BlastingCommand();
+public class FurnaceCommand implements Command<CommandSource> {
+    public static FurnaceCommand instance = new FurnaceCommand();
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
@@ -29,8 +28,7 @@ public class BlastingCommand implements Command<CommandSource> {
 
         }
 
-
-        NetworkHooks.openGui(serverPlayer,new BlastingContainerProvider(serverPlayer), (PacketBuffer packetBuffer) -> {
+        NetworkHooks.openGui(serverPlayer,new FurnaceContainerProvider(), (PacketBuffer packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;

@@ -16,18 +16,11 @@ import org.gloomybanana.DPRM.container.CraftingShapelessContainer;
 import javax.annotation.Nullable;
 
 public class CraftingShapelessContainerProvider implements INamedContainerProvider {
-    private final ServerPlayerEntity serverPlayer;
-    public CraftingShapelessContainerProvider(ServerPlayerEntity serverPlayer) {
-        this.serverPlayer = serverPlayer;
-    }
 
     @Nullable
     @Override
     public Container createMenu(int sycID, PlayerInventory playerInventory, PlayerEntity player) {
-        String playerName = serverPlayer.getName().getFormattedText();
-        String recipePath = serverPlayer.getServerWorld().getSaveHandler().getWorldDirectory().getPath() + "\\datapacks\\add_by_" + playerName + "\\data\\minecraft\\recipes";
-        PacketBuffer packetBuffer = new PacketBuffer(Unpooled.buffer()).writeString(recipePath);
-
+        PacketBuffer packetBuffer = new PacketBuffer(Unpooled.buffer());
         return new CraftingShapelessContainer(sycID,playerInventory,packetBuffer);
     }
 
@@ -36,7 +29,4 @@ public class CraftingShapelessContainerProvider implements INamedContainerProvid
         return new TranslationTextComponent("gui."+ DPRM.MOD_ID +".crafting_shapeless.title");
     }
 
-    public ServerPlayerEntity getServerPlayer() {
-        return serverPlayer;
-    }
 }

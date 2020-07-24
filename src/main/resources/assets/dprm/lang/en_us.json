@@ -5,6 +5,7 @@
   "gui.dprm.crafting_shapeless.title": "Crafting Shapeless",
   "gui.dprm.smelting.title": "Smelting",
   "gui.dprm.smoking.title": "Smoking",
+  "gui.dprm.furnace.toggle": "toggle furnace type",
   "gui.dprm.stonecutting.title": "Stonecutting",
   "gui.dprm.recipe_info.recipe_name": "recipe name",
   "gui.dprm.recipe_info.group_name": "group",

@@ -68,7 +68,6 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.recipeNameInput.setMaxStringLength(35);//最大输入长度
         this.recipeNameInput.setCanLoseFocus(true);
         this.recipeNameInput.setResponder(this::recipeNameinputResponder);//每次输入后的回调函数
-        this.children.add(this.recipeNameInput);
         //组名输入框
         this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 31, 80, 12, GROUP_NAME);//字体，位置，宽高，信息
         this.groupNameInput.setTextColor(-1);
@@ -77,12 +76,13 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.groupNameInput.setMaxStringLength(35);//最大输入长度
         this.groupNameInput.setCanLoseFocus(true);
         this.groupNameInput.setResponder(this::groupNameinputResponder);//每次输入后的回调函数
-        this.children.add(this.groupNameInput);
         //监听器
         this.container.addListener(this);
-
         //按钮初始化
         this.confirmBtn = new Button(this.guiLeft - 85, this.guiTop + 85, 80, 20, ADD_RECIPE, this::onConfirmBtnPress);//位置，宽高，文字，按下后回调函数
+
+        this.children.add(this.recipeNameInput);
+        this.children.add(this.groupNameInput);
         this.addButton(confirmBtn);//添加到Screen
     }
     public void tick() {
