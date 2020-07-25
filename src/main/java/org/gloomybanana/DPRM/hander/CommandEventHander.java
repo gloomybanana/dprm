@@ -17,16 +17,11 @@ public class CommandEventHander {
         LiteralArgumentBuilder<CommandSource> dprm = Commands.literal("dprm");//新建节点名
         dprm.requires((commandSource)-> commandSource.hasPermissionLevel(0));//设置为一般玩家权限
         dprm.executes(RecipeListCommand.instance);
-        //命令节点"crafting_shaped"
-        LiteralArgumentBuilder<CommandSource> crafting_shaped = Commands.literal("crafting_shaped");//新建节点名
-        crafting_shaped.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
-        crafting_shaped.executes(CraftingShapedCommand.instance);//命令功能
-        dprm.then(crafting_shaped);//绑定到"dprm"节点上
-        //命令节点"crafting_shapeless"
-        LiteralArgumentBuilder<CommandSource> crafting_shapeless = Commands.literal("crafting_shapeless");//新建节点名
-        crafting_shapeless.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
-        crafting_shapeless.executes(CraftingShapelessCommand.instance);//命令功能
-        dprm.then(crafting_shapeless);//绑定到"dprm"节点上
+        //命令节点"crafting"
+        LiteralArgumentBuilder<CommandSource> crafting = Commands.literal("crafting");//新建节点名
+        crafting.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
+        crafting.executes(CraftingCommand.instance);//命令功能
+        dprm.then(crafting);//绑定到"dprm"节点上
         //命令节点"furnace"
         LiteralArgumentBuilder<CommandSource> blasting = Commands.literal("furnace");
         blasting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限

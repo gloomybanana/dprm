@@ -13,6 +13,7 @@ public class RecipeListContainer extends Container {
     public RecipeListContainer(int sycID, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
         super(Registry.recipeListContainer.get(),sycID);
         this.packetBuffer = packetBuffer;
+
     }
 
     @Override

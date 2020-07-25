@@ -12,8 +12,7 @@ import org.gloomybanana.DPRM.network.Networking;
 public class ModEventHander {
     @SubscribeEvent
     public static void onClineSetupEvent(FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(Registry.craftingShapedContainer.get(), CraftingShapedScreen::new);
-        ScreenManager.registerFactory(Registry.craftingShapelessContainer.get(), CraftingShapelessScreen::new);
+        ScreenManager.registerFactory(Registry.craftingContainer.get(), CraftingScreen::new);
         ScreenManager.registerFactory(Registry.furnaceContainer.get(), FurnaceScreen::new);
         ScreenManager.registerFactory(Registry.stonecuttingContainer.get(), StonecuttingScreen::new);
         ScreenManager.registerFactory(Registry.recipeListContainer.get(), RecipeListScreen::new);

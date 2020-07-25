@@ -6,12 +6,15 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import org.gloomybanana.DPRM.container.StonecuttingContainer;
 import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.network.ScreenToggle;
+import org.gloomybanana.DPRM.network.Networking;
+import org.gloomybanana.DPRM.network.CRUDRecipe;
 
 public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingContainer> {
 
@@ -33,7 +36,7 @@ public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingCo
         isResultSlotEmpty = slots[0].getStack().isEmpty();//判断合成槽是否为空
         isCraftingSlotEmpty = slots[1].getStack().isEmpty();//判断
 
-        this.confirmBtn.active = !isResultSlotEmpty && !isCraftingSlotEmpty && !isRecipeNameEmpty && !isGroupNameEmpty && !isRecipeJsonExist;
+        this.confirmBtn.active = !isResultSlotEmpty && !isCraftingSlotEmpty && !isRecipeNameEmpty && !isGroupNameEmpty;
     }
 
     @Override
@@ -46,24 +49,57 @@ public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingCo
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX,mouseY);
-        this.font.drawString(this.title.getFormattedText(), 8.0F, 4.0F, 4210752);
+        String s = this.title.getFormattedText();
+        this.font.drawString(s, (float)(this.xSize / 2 - this.font.getStringWidth(s) / 2), 6.0F, 4210752);
     }
 
     @Override
     public void render(int mouseX, int mouseY, float particleTick) {
         super.render(mouseX, mouseY, particleTick);
+
+        if (isRecipeJsonExist){
+            renderFakeRecipe();
+        }
+    }
+
+    private void renderFakeRecipe() {
+        if (currentRecipe==null) return;
+        String type = currentRecipe.getString("type");
+        if (type.equals("stonecutting")){
+            String ingredientItemRegistryName = currentRecipe.getJSONObject("ingredient").getString("item");
+            String resultRegistryName = currentRecipe.getString("result");
+            ItemStack ingredientItemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ingredientItemRegistryName)));
+            Integer resultcount = currentRecipe.getInteger("count");
+            ItemStack resultItemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(resultRegistryName)),resultcount);
+            this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(ingredientItemStack,guiLeft+20,guiTop+33);
+            this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(resultItemStack,guiLeft+143,guiTop+33);
+        }
     }
 
     @Override
     public void onConfirmBtnPress(Button button) {
         JSONObject stonecuttingRecipe = JsonManager.genStonecuttingRecipe(container.stonecuttingSlots, groupNameInput.getText());
-        JSONObject result = JsonManager.createJsonFile(jsonPacket,stonecuttingRecipe,recipeNameInput.getText());
-        if (result.getBoolean("success")){
-            System.out.println(result.getString("dir"));
-            playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_successed",result.getString("dir")));
-        }else {
-            playerInventory.player.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")));
-        }
+        jsonPacket.put("json_recipe",stonecuttingRecipe);
+        jsonPacket.put("recipe_name",recipeNameInput.getText());
+        jsonPacket.put("crud","create");
+        Networking.INSTANCE.sendToServer(new CRUDRecipe(jsonPacket.toJSONString()));
+
+        jsonPacket.put("operate","open_stonecutting_screen");
+        Networking.INSTANCE.sendToServer(new ScreenToggle(jsonPacket.toJSONString()));
 //        this.minecraft.player.closeScreen();
+    }
+
+    @Override
+    public void removed() {
+        super.removed();
+    }
+
+    public void deleteRecipe(Button button) {
+        jsonPacket.put("crud","delete");
+        jsonPacket.put("select_recipe_name",recipeNameInput.getText());
+        Networking.INSTANCE.sendToServer(new CRUDRecipe(jsonPacket.toJSONString()));
+        jsonPacket.put("select_recipe_name","");
+        jsonPacket.put("operate","open_stonecutting_screen");
+        Networking.INSTANCE.sendToServer(new ScreenToggle(jsonPacket.toJSONString()));
     }
 }

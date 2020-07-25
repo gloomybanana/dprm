@@ -5,17 +5,24 @@ import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.FurnaceContainer;
 import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.gloomybanana.DPRM.network.Networking;
-import org.gloomybanana.DPRM.network.SendRecipePack;
+import org.gloomybanana.DPRM.network.CRUDRecipe;
 import org.gloomybanana.DPRM.widget.ToggleFurnaceTypeButton;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
     Boolean isResultSlotEmpty = true;
@@ -25,7 +32,7 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
 
     TextFieldWidget experienceInput;
     TextFieldWidget cookingTimeInput;
-    ToggleFurnaceTypeButton.Type currenType = ToggleFurnaceTypeButton.Type.blasting;
+    ToggleFurnaceTypeButton.Type currentType = ToggleFurnaceTypeButton.Type.smelting;
     ToggleFurnaceTypeButton toggleFurnaceBtn;
 
     public FurnaceScreen(FurnaceContainer furnaceContainer, PlayerInventory inv, ITextComponent titleIn) {
@@ -37,7 +44,7 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
         //侧边栏组件初始化
         super.init();
         //经验
-        this.experienceInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 47, 24, 12, EXPERIENCE);
+        this.experienceInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 47, 24, 12, I18n.format("gui."+DPRM.MOD_ID+".furnance.experience"));
         this.experienceInput.setCanLoseFocus(true);
         this.experienceInput.setTextColor(-1);
         this.experienceInput.setDisabledTextColour(0x808080);
@@ -47,26 +54,26 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
         experienceInput.setText("0.35");
         this.children.add(this.experienceInput);
         //时间
-        this.cookingTimeInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 63, 24, 12,COOKING_TIME);
+        this.cookingTimeInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 63, 24, 12,I18n.format("gui."+DPRM.MOD_ID+".furnance.cooking_time"));
         this.cookingTimeInput.setCanLoseFocus(true);
         this.cookingTimeInput.setTextColor(-1);
         this.cookingTimeInput.setDisabledTextColour(0x808080);
         this.cookingTimeInput.setEnableBackgroundDrawing(false);
-        this.cookingTimeInput.setMaxStringLength(10);
+        this.cookingTimeInput.setMaxStringLength(8);
         this.cookingTimeInput.setResponder(this::cookingTimeInputOnWrite);
         cookingTimeInput.setText("200");
         this.children.add(this.cookingTimeInput);
 
-        this.toggleFurnaceBtn = new ToggleFurnaceTypeButton(guiLeft+56,guiTop+54,20,20,this::changeFurnaceType,currenType);
+        this.toggleFurnaceBtn = new ToggleFurnaceTypeButton(guiLeft+56,guiTop+54,20,20,this::changeFurnaceType, currentType);
         this.children.add(toggleFurnaceBtn);
     }
 
     private void changeFurnaceType(Button button) {
         ((ToggleFurnaceTypeButton) button).toggle();
-        int ordinal = currenType.ordinal();
+        int ordinal = currentType.ordinal();
         ordinal++;
         if (ordinal > 3) ordinal = 0;
-        currenType = ToggleFurnaceTypeButton.Type.values()[ordinal];
+        currentType = ToggleFurnaceTypeButton.Type.values()[ordinal];
     }
 
     private void cookingTimeInputOnWrite(String s) {
@@ -98,8 +105,22 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
             if(!slots[i].getStack().isEmpty())isCraftingSlotEmpty = false;
         }
         //按钮是否激活
-        this.confirmBtn.active = !isResultSlotEmpty && !isCraftingSlotEmpty && !isRecipeNameEmpty && !isGroupNameEmpty && !isRecipeJsonExist &&isCookingTimeInputValid&&isExperienceInputValid;
+        this.confirmBtn.active = !isResultSlotEmpty && !isCraftingSlotEmpty && !isRecipeNameEmpty && !isGroupNameEmpty &&isCookingTimeInputValid&&isExperienceInputValid;
     }
+
+    Boolean isToggleBtnHovered = false;
+    @Override
+    protected void renderHoveredToolTip(int mouseX, int mouseY) {
+        super.renderHoveredToolTip(mouseX, mouseY);
+        //判断是否悬停在切换按钮
+        List<String> toggleFurnaceToolTips = new ArrayList<>();
+        toggleFurnaceToolTips.add(I18n.format("gui."+ DPRM.MOD_ID+".toggle_furnace_type"));
+        if ((mouseX>=guiLeft+55)&&(mouseX<=guiLeft+55+18)&&(mouseY>=guiTop+53)&&(mouseY<=guiTop+53+18)){
+            this.renderTooltip(toggleFurnaceToolTips,mouseX,mouseY);
+            isToggleBtnHovered = true;
+        }else isToggleBtnHovered =false;
+    }
+
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         //绘制Container背景,侧边栏组件
@@ -109,17 +130,17 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
         blit( guiLeft - 85,  guiTop + 43, 0, 198, 24, 15, textureWidth, textureHeight);
         blit( guiLeft - 85,  guiTop + 59, 0, 198, 24, 15, textureWidth, textureHeight);
         //经验,时间文字
-        this.font.drawString(EXPERIENCE, guiLeft-59, guiTop+46, 0xFF222222);
-        this.font.drawString(COOKING_TIME, guiLeft-59, guiTop+62,0xFF222222);
+        if (isToggleBtnHovered)blit(guiLeft+54,guiTop+52,176,0,20,20,textureWidth,textureHeight);
+        this.font.drawString(I18n.format("gui."+DPRM.MOD_ID+".furnance.experience"), guiLeft-59, guiTop+46, 0xFF222222);
+        this.font.drawString(I18n.format("gui."+DPRM.MOD_ID+".furnance.cooking_time"), guiLeft-59, guiTop+62,0xFF222222);
         //图标
-        this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(currenType.getIcon(),guiLeft+56,guiTop+54);
-
+        this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(currentType.getIcon(),guiLeft+56,guiTop+54);
     }
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         //绘制背包名称
         super.drawGuiContainerForegroundLayer(mouseX,mouseY);
         //标题文字
-        String s = currenType.getTitle();
+        String s = currentType.getTitle();
         this.font.drawString(s, (float)(this.xSize / 2 - this.font.getStringWidth(s) / 2), 6.0F, 4210752);
     }
     @Override
@@ -127,24 +148,44 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
         super.render(mouseX, mouseY, particleTick);
         this.experienceInput.render(mouseX,mouseY,particleTick);
         this.cookingTimeInput.render(mouseX,mouseY,particleTick);
-
-//        List<String> toggleFurnaceToolTips = new ArrayList<>();
-//        toggleFurnaceToolTips.add(I18n.format("gui."+ DPRM.MOD_ID+".furnace.toggle"));
-//        if (this.toggleFurnaceBtn.isHovered()){
-//            this.renderTooltip(toggleFurnaceToolTips,mouseX,mouseY);
-//        }
-
+        if (isRecipeJsonExist){
+            renderFakeRecipe();
+            if (recipeNameInput!=null){
+                if (recipeNameInput.isFocused()){
+                    if (currentRecipe.getString("type").equals("smelting")) currentType = ToggleFurnaceTypeButton.Type.smelting;
+                    if (currentRecipe.getString("type").equals("blasting")) currentType = ToggleFurnaceTypeButton.Type.blasting;
+                    if (currentRecipe.getString("type").equals("smoking")) currentType = ToggleFurnaceTypeButton.Type.smoking;
+                    if (currentRecipe.getString("type").equals("campfire_cooking")) currentType = ToggleFurnaceTypeButton.Type.campfire_cooking;
+                }
+            }
+        }
     }
+
+    private void renderFakeRecipe() {
+        if (currentRecipe==null) return;
+        String type = currentRecipe.getString("type");
+        if (type.equals("smelting")||type.equals("blasting")||type.equals("smoking")||type.equals("campfire_cooking")){
+            String ingredientItemRegistryName = currentRecipe.getJSONObject("ingredient").getString("item");
+            String resultRegistryName = currentRecipe.getString("result");
+            ItemStack ingredientItemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ingredientItemRegistryName)));
+            ItemStack resultItemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(resultRegistryName)));
+            this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(ingredientItemStack,guiLeft+56,guiTop+17);
+            this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(resultItemStack,guiLeft+116,guiTop+35);
+        }
+    }
+
     @Override
     public void onConfirmBtnPress(Button button) {
-        String furnaceType = currenType.name();
+        String furnaceType = currentType.name();
         JSONObject blastingRecipe = JsonManager.genFurnaceRecipe(container.furnaceSlots, groupNameInput.getText(),Doubles.tryParse(experienceInput.getText()),Ints.tryParse(cookingTimeInput.getText()),furnaceType);
-        JSONObject recipeJsonData = new JSONObject(true);
-        recipeJsonData.put("jsonPacket",jsonPacket);
-        recipeJsonData.put("json_recipe",blastingRecipe);
-        recipeJsonData.put("recipe_name",recipeNameInput.getText());
-        Networking.INSTANCE.sendToServer(new SendRecipePack(recipeJsonData.toJSONString()));
-        this.minecraft.player.closeScreen();
+        jsonPacket.put("json_recipe",blastingRecipe);
+        jsonPacket.put("recipe_name",recipeNameInput.getText());
+        jsonPacket.put("crud","create");
+        Networking.INSTANCE.sendToServer(new CRUDRecipe(jsonPacket.toJSONString()));
+
+        jsonPacket.put("operate","open_furnace_screen");
+        Networking.INSTANCE.sendToServer(new ScreenToggle(jsonPacket.toJSONString()));
+//        this.minecraft.player.closeScreen();
     }
 
     @Override
@@ -157,5 +198,19 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
                 || this.experienceInput.keyPressed(keyCode, scanCode, modifier) || this.experienceInput.canWrite()
                 || this.cookingTimeInput.keyPressed(keyCode, scanCode, modifier) || this.cookingTimeInput.canWrite()
                 || super.keyPressed(keyCode, scanCode, modifier);
+    }
+
+
+    @Override
+    public void removed() {
+        super.removed();
+    }
+    public void deleteRecipe(Button button) {
+        jsonPacket.put("crud","delete");
+        jsonPacket.put("select_recipe_name",recipeNameInput.getText());
+        Networking.INSTANCE.sendToServer(new CRUDRecipe(jsonPacket.toJSONString()));
+        jsonPacket.put("select_recipe_name","");
+        jsonPacket.put("operate","open_furnace_screen");
+        Networking.INSTANCE.sendToServer(new ScreenToggle(jsonPacket.toJSONString()));
     }
 }
