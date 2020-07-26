@@ -28,5 +28,18 @@
   "gui.dprm.add_stonecutting_recipe": "添加切石机配方",
   "gui.dprm.this_is_a_crafting_recipe": "这是一个合成配方",
   "gui.dprm.this_is_a_furnace_recipe": "这是一个熔炉配方",
-  "gui.dprm.this_is_a_stonecutting_recipe": "这是一个切石机配方"
+  "gui.dprm.this_is_a_stonecutting_recipe": "这是一个切石机配方",
+
+  "gui.dprm.type.crafting_shaped": "有序合成",
+  "gui.dprm.type.crafting_shapeless": "无序合成",
+  "gui.dprm.type.smelting": "熔炉",
+  "gui.dprm.type.smoking": "烟熏",
+  "gui.dprm.type.blasting": "高炉",
+  "gui.dprm.type.campfire_cooking": "营火",
+  "gui.dprm.type.stonecutting": "切割",
+
+  "gui.dprm.tooltips.recipe_name": "名称: %s",
+  "gui.dprm.tooltips.recipe_type": "类型: %s",
+  "gui.dprm.tooltips.this_is_xx_recipe_type": "这是一个%s配方"
+
 }

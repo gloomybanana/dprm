@@ -22,11 +22,10 @@ import java.io.IOException;
 import java.util.function.Supplier;
 
 public class ScreenToggle {
-    private String jsonString;
-    private static final Logger LOGGER = LogManager.getLogger();
+    String jsonString;
 
     public ScreenToggle(PacketBuffer buffer) {
-        jsonString = buffer.readString();
+        this.jsonString = buffer.readString();
     }
 
     //反序列化
@@ -43,7 +42,6 @@ public class ScreenToggle {
         ctx.get().enqueueWork(() -> {
             DPRM.LOGGER.info("Send From Client:"+this.jsonString);
         });
-
         ServerPlayerEntity serverPlayer = null;
         try {
             serverPlayer = ctx.get().getSender().getCommandSource().asPlayer();

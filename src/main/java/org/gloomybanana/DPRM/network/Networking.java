@@ -13,7 +13,7 @@ public class Networking {
 
     public static void registerMessage() {
         INSTANCE = NetworkRegistry.newSimpleChannel(
-                new ResourceLocation("compressedblock" + ":first_networking"),//唯一标识符
+                new ResourceLocation("dprm" + ":first_networking"),//唯一标识符
                 () -> "1.0",//版本
                 (s) -> true,//是否想服务端传数据
                 (s) -> true//是否向客户端传数据

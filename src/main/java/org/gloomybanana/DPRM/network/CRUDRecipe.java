@@ -6,23 +6,18 @@ import com.alibaba.fastjson.parser.Feature;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.STitlePacket;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.file.JsonManager;
-
 import java.util.function.Supplier;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
-
 public class CRUDRecipe {
-    private String jsonString;
-
+    String jsonString;
 
     public CRUDRecipe(PacketBuffer buffer) {
-        jsonString = buffer.readString();
+        this.jsonString = buffer.readString();
     }
 
     //反序列化

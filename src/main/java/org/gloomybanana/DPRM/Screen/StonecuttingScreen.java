@@ -2,6 +2,7 @@ package org.gloomybanana.DPRM.Screen;
 
 import com.alibaba.fastjson.JSONObject;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -60,6 +61,7 @@ public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingCo
         if (isRecipeJsonExist){
             renderFakeRecipe();
         }
+
     }
 
     private void renderFakeRecipe() {

@@ -23,6 +23,7 @@ public class CraftingCommand implements Command<CommandSource> {
         jsonPacket.put("player_name",serverPlayer.getName().getFormattedText());
         jsonPacket.put("datapacks_dir_path",datapacksDirPath);
         jsonPacket.put("select_recipe_name","");
+        jsonPacket.put("current_page",1);
         try {
             jsonPacket.put("recipe_list", JsonManager.getAllRecipes(jsonPacket));
         } catch (IOException e) {

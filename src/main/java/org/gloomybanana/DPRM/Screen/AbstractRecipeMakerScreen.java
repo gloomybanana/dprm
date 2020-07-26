@@ -65,6 +65,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.recipeNameInput.setEnableBackgroundDrawing(false);
         this.recipeNameInput.setMaxStringLength(35);//最大输入长度
         this.recipeNameInput.setCanLoseFocus(true);
+        this.recipeNameInput.setFocused2(true);
         this.recipeNameInput.setText(jsonPacket.getString("select_recipe_name"));
         this.recipeNameInput.setResponder(this::recipeNameinputResponder);//每次输入后的回调函数
         //组名输入框
@@ -199,10 +200,10 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         if (this.recipeNameInput.isHovered()&&!recipeNameInput.isFocused()){
             this.renderTooltip(recipeNameInputTooltips,mouseX,mouseY);
         }else if (this.recipeNameInput.isHovered()&&recipeNameInput.isFocused()){
-            if (isRecipeJsonExist){
-                String currentType = currentRecipe.getString("type");
-                this.renderTooltip(getCurrentTypeTooltips(currentType),mouseX,mouseY);
-            }
+//            if (isRecipeJsonExist){
+//                String currentType = currentRecipe.getString("type");
+//                this.renderTooltip(getCurrentTypeTooltips(currentType),mouseX,mouseY);
+//            }
         }
         ArrayList<String> groupNameInputTooltips = new ArrayList<>();
         groupNameInputTooltips.add(groupNameInput.getMessage());

@@ -28,5 +28,18 @@
   "gui.dprm.add_stonecutting_recipe": "add stonecutting recipe",
   "gui.dprm.this_is_a_crafting_recipe": "this is a crafting recipe",
   "gui.dprm.this_is_a_furnace_recipe": "this is a furnace recipe",
-  "gui.dprm.this_is_a_stonecutting_recipe": "this is a stonecutting recipe"
+  "gui.dprm.this_is_a_stonecutting_recipe": "this is a stonecutting recipe",
+
+  "gui.dprm.type.crafting_shaped": "crafting shaped",
+  "gui.dprm.type.crafting_shapeless": "crafting shapeless",
+  "gui.dprm.type.smelting": "smelting",
+  "gui.dprm.type.smoking": "smoking",
+  "gui.dprm.type.blasting": "blasting",
+  "gui.dprm.type.campfire_cooking": "campfire_cooking",
+  "gui.dprm.type.stonecutting": "stonecutting",
+
+  "gui.dprm.tooltips.recipe_name": "name: %s",
+  "gui.dprm.tooltips.recipe_type": "type: %s",
+  "gui.dprm.tooltips.this_is_xx_recipe_type": "this is a %s recipe"
+
 }

@@ -7,30 +7,35 @@ import net.minecraft.command.Commands;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import org.gloomybanana.DPRM.Config;
 import org.gloomybanana.DPRM.command.*;
 
 @Mod.EventBusSubscriber
 public class CommandEventHander {
     @SubscribeEvent
     public static void onServerStarting(FMLServerStartingEvent event){
+
+        Boolean onlyOperatorCanUse = Config.VALUE.get();
+        Integer permissionLevel = onlyOperatorCanUse?2:0;
+
         //命令节点"dprm"
-        LiteralArgumentBuilder<CommandSource> dprm = Commands.literal("dprm");//新建节点名
-        dprm.requires((commandSource)-> commandSource.hasPermissionLevel(0));//设置为一般玩家权限
+        LiteralArgumentBuilder<CommandSource> dprm = Commands.literal("dprm");
+        dprm.requires((commandSource)-> commandSource.hasPermissionLevel(permissionLevel));
         dprm.executes(RecipeListCommand.instance);
         //命令节点"crafting"
-        LiteralArgumentBuilder<CommandSource> crafting = Commands.literal("crafting");//新建节点名
-        crafting.requires((commandSource)-> commandSource.hasPermissionLevel(2));//设置为管理员权限
-        crafting.executes(CraftingCommand.instance);//命令功能
+        LiteralArgumentBuilder<CommandSource> crafting = Commands.literal("crafting");
+        crafting.requires((commandSource)-> commandSource.hasPermissionLevel(permissionLevel));
+        crafting.executes(CraftingCommand.instance);
         dprm.then(crafting);//绑定到"dprm"节点上
         //命令节点"furnace"
         LiteralArgumentBuilder<CommandSource> blasting = Commands.literal("furnace");
-        blasting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
+        blasting.requires((commandSource -> commandSource.hasPermissionLevel(permissionLevel)));
         blasting.executes(FurnaceCommand.instance);//命令功能
         dprm.then(blasting);
         //命令节点"stonecutting"
         LiteralArgumentBuilder<CommandSource> stonecutting = Commands.literal("stonecutting");
-        stonecutting.requires((commandSource -> commandSource.hasPermissionLevel(2)));//设置管理员权限
-        stonecutting.executes(StonecuttingCommand.instance);//命令功能
+        stonecutting.requires((commandSource -> commandSource.hasPermissionLevel(permissionLevel)));
+        stonecutting.executes(StonecuttingCommand.instance);
         dprm.then(stonecutting);
         //命令节点"smithing"
         //TODO

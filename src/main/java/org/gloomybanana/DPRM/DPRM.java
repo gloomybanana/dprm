@@ -1,6 +1,8 @@
 package org.gloomybanana.DPRM;
 
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +20,7 @@ public class DPRM {
     public DPRM(){
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         Registry.CONTAINERS_TYPE.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
     }
     public void setup(final FMLCommonSetupEvent event){
 

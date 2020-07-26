@@ -6,6 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
 
 import java.io.*;
@@ -264,5 +267,40 @@ public class JsonManager {
         pattern.add(1,p4+p5+p6);
         pattern.add(2,p7+p8+p9);
         return pattern;
+    }
+
+    public static String getResultName(JSONObject content){
+        String type = content.getString("type");
+        if (type.equals("blasting")||type.equals("campfire_cooking")||type.equals("smelting")||type.equals("smoking")||type.equals("stonecutting")){
+            return content.getString("result");
+        }
+        if (type.equals("minecraft:crafting_shaped")||type.equals("minecraft:crafting_shapeless")){
+            return content.getJSONObject("result").getString("item");
+        }else return "minecraft:air";
+    }
+
+    public static String translateRegisryName(String regisryName){
+        ITextComponent name = ForgeRegistries.ITEMS.getValue(new ResourceLocation(regisryName)).getName();
+        return name.getString();
+    }
+
+    public static String translateRecipeType(String typeName){
+        switch (typeName) {
+            case "minecraft:crafting_shaped":
+                return I18n.format("gui." + DPRM.MOD_ID + ".type.crafting_shaped");
+            case "minecraft:crafting_shapeless":
+                return I18n.format("gui." + DPRM.MOD_ID + ".type.crafting_shapeless");
+            case "smelting":
+                return I18n.format("gui." + DPRM.MOD_ID + ".type.smelting");
+            case "smoking":
+                return I18n.format("gui." + DPRM.MOD_ID + ".type.smoking");
+            case "blasting":
+                return I18n.format("gui." + DPRM.MOD_ID + ".type.blasting");
+            case "campfire_cooking":
+                return I18n.format("gui." + DPRM.MOD_ID + ".type.campfire_cooking");
+            case "stonecutting":
+                return I18n.format("gui." + DPRM.MOD_ID + ".type.stonecutting");
+        }
+        return "other";
     }
 }

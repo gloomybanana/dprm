@@ -159,6 +159,7 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
                 }
             }
         }
+
     }
 
     private void renderFakeRecipe() {

@@ -53,6 +53,15 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
     @Override
     public void render(int mouseX, int mouseY, float particleTick) {
         super.render(mouseX, mouseY, particleTick);
+
+//        try {
+//            String type = currentRecipe.getString("type");
+//            if (type.equals("minecraft:crafting_shaped") || type.equals("minecraft:crafting_shapeless")) {
+//            } else if (type.equals("smelting")||type.equals("smoking")||type.equals("blasting")||type.equals("campfire_cooking")||type.equals("stonecutting")){
+//                this.font.drawString(I18n.format("gui."+DPRM.MOD_ID+".tooltips.this_is_xx_recipe_type",JsonManager.translateRecipeType(type)), guiLeft - 82, guiTop - 15, 0XFFFFFF);
+//            }
+//        } catch (Exception e) {}
+
         if (isRecipeJsonExist){
             renderFakeRecipe();
             if (recipeNameInput!=null){
