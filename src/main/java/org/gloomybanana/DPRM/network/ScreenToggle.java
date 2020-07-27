@@ -25,7 +25,7 @@ public class ScreenToggle {
     String jsonString;
 
     public ScreenToggle(PacketBuffer buffer) {
-        this.jsonString = buffer.readString();
+        this.jsonString = buffer.readString(3000000);
     }
 
     //反序列化
@@ -35,7 +35,7 @@ public class ScreenToggle {
 
     //序列化
     public void toBytes(PacketBuffer buf) {
-        buf.writeString(this.jsonString);
+        buf.writeString(this.jsonString,3000000);
     }
 
     public void handler(Supplier<NetworkEvent.Context> ctx) {

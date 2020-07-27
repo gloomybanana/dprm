@@ -14,7 +14,7 @@ public class DPRM {
 
     public static final String MOD_ID = "dprm";
     public static final String MOD_NAME = "Datapack Recipe Maker";
-    public static final String MOD_VERSION = "1.1";
+    public static final String MOD_VERSION = "1.2";
     public static final Logger LOGGER = LogManager.getLogger();
 
     public DPRM(){

@@ -17,7 +17,7 @@ public class CRUDRecipe {
     String jsonString;
 
     public CRUDRecipe(PacketBuffer buffer) {
-        this.jsonString = buffer.readString();
+        this.jsonString = buffer.readString(3000000);
     }
 
     //反序列化
@@ -27,7 +27,7 @@ public class CRUDRecipe {
 
     //序列化
     public void toBytes(PacketBuffer buf) {
-        buf.writeString(this.jsonString);
+        buf.writeString(this.jsonString,3000000);
     }
 
     public void handler(Supplier<NetworkEvent.Context> ctx) {
