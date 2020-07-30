@@ -11,10 +11,10 @@ import net.minecraft.network.PacketBuffer;
 
 import javax.annotation.Nullable;
 
-public class AbstractRecipeContainer extends Container {
+public class ContainerWithPlayerInventory extends Container {
     private final PacketBuffer packetBuffier;
 
-    protected AbstractRecipeContainer(@Nullable ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer packetBuffier) {
+    protected ContainerWithPlayerInventory(@Nullable ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer packetBuffier) {
         super(type, id);
         this.packetBuffier = packetBuffier;
         //玩家背包插槽

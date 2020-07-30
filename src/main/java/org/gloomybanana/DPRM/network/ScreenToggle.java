@@ -3,20 +3,16 @@ package org.gloomybanana.DPRM.network;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.containerprovider.CraftingContainerProvider;
-import org.gloomybanana.DPRM.containerprovider.FurnaceContainerProvider;
-import org.gloomybanana.DPRM.containerprovider.RecipeListContainerProvider;
-import org.gloomybanana.DPRM.containerprovider.StonecuttingContainerProvider;
-import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.containerprovider.vanilla.CraftingContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.vanilla.FurnaceContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.vanilla.RecipeListContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.vanilla.StonecuttingContainerProvider;
+import org.gloomybanana.DPRM.file.VanillaRecipeJson;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -51,7 +47,7 @@ public class ScreenToggle {
 
         JSONObject jsonPacket = JSON.parseObject(jsonString);
         try {
-            jsonPacket.put("recipe_list", JsonManager.getAllRecipes(jsonPacket));
+            jsonPacket.put("recipe_list", VanillaRecipeJson.getAllRecipes(jsonPacket));
         } catch (IOException e) {
             e.printStackTrace();
         }

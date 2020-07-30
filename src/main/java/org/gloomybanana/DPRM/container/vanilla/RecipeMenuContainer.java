@@ -1,16 +1,16 @@
-package org.gloomybanana.DPRM.container;
+package org.gloomybanana.DPRM.container.vanilla;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.network.PacketBuffer;
-import org.gloomybanana.DPRM.hander.Registry;
+import org.gloomybanana.DPRM.handler.Registry;
 
 
-public class RecipeListContainer extends Container {
+public class RecipeMenuContainer extends Container {
     private final PacketBuffer packetBuffer;
 
-    public RecipeListContainer(int sycID, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
+    public RecipeMenuContainer(int sycID, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
         super(Registry.recipeListContainer.get(),sycID);
         this.packetBuffer = packetBuffer;
 

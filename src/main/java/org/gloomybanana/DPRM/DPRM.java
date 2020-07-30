@@ -7,7 +7,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.gloomybanana.DPRM.hander.Registry;
+import org.gloomybanana.DPRM.handler.Registry;
 
 @Mod("dprm")
 public class DPRM {

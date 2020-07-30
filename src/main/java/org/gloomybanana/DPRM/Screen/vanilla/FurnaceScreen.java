@@ -1,4 +1,4 @@
-package org.gloomybanana.DPRM.Screen;
+package org.gloomybanana.DPRM.Screen.vanilla;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.primitives.Doubles;
@@ -13,8 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.container.FurnaceContainer;
-import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.container.vanilla.FurnaceContainer;
+import org.gloomybanana.DPRM.file.VanillaRecipeJson;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.CRUDRecipe;
@@ -24,7 +24,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
+public class FurnaceScreen extends ScreenWithRecipeInfo<FurnaceContainer> {
     Boolean isResultSlotEmpty = true;
     Boolean isCraftingSlotEmpty = true;
     Boolean isExperienceInputValid = false;
@@ -37,7 +37,7 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
 
     public FurnaceScreen(FurnaceContainer furnaceContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(furnaceContainer, inv, titleIn);
-        this.SCREEN_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/furnance.png");
+        this.SIDE_INFO_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/furnance.png");
     }
     @Override
     protected void init() {
@@ -125,7 +125,7 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         //绘制Container背景,侧边栏组件
         super.drawGuiContainerBackgroundLayer(partialTicks,mouseX,mouseY);
-        this.minecraft.getTextureManager().bindTexture(this.SCREEN_TEXTURE);
+        this.minecraft.getTextureManager().bindTexture(this.SIDE_INFO_TEXTURE);
         //烧制时间、经验背景框
         blit( guiLeft - 85,  guiTop + 43, 0, 198, 24, 15, textureWidth, textureHeight);
         blit( guiLeft - 85,  guiTop + 59, 0, 198, 24, 15, textureWidth, textureHeight);
@@ -178,7 +178,7 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
     @Override
     public void onConfirmBtnPress(Button button) {
         String furnaceType = currentType.name();
-        JSONObject blastingRecipe = JsonManager.genFurnaceRecipe(container.furnaceSlots, groupNameInput.getText(),Doubles.tryParse(experienceInput.getText()),Ints.tryParse(cookingTimeInput.getText()),furnaceType);
+        JSONObject blastingRecipe = VanillaRecipeJson.genFurnaceRecipe(container.furnaceSlots, groupNameInput.getText(),Doubles.tryParse(experienceInput.getText()),Ints.tryParse(cookingTimeInput.getText()),furnaceType);
         jsonPacket.put("json_recipe",blastingRecipe);
         jsonPacket.put("recipe_name",recipeNameInput.getText());
         jsonPacket.put("crud","create");

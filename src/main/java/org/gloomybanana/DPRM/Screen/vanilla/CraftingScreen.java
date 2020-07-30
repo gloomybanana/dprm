@@ -1,4 +1,4 @@
-package org.gloomybanana.DPRM.Screen;
+package org.gloomybanana.DPRM.Screen.vanilla;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -12,8 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.container.CraftingContainer;
-import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.container.vanilla.CraftingContainer;
+import org.gloomybanana.DPRM.file.VanillaRecipeJson;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.gloomybanana.DPRM.network.CRUDRecipe;
@@ -22,7 +22,7 @@ import org.gloomybanana.DPRM.widget.ToggleCraftingTypeButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer> {
+public class CraftingScreen extends ScreenWithRecipeInfo<CraftingContainer> {
     //提交按钮判断条件
     Boolean isResultSlotEmpty = true;
     Boolean isCraftingSlotEmpty = true;
@@ -32,7 +32,7 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
 
     public CraftingScreen(CraftingContainer craftingContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(craftingContainer, inv, titleIn);
-        SCREEN_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/crafting_table.png");
+        SIDE_INFO_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/crafting_table.png");
     }
 
     @Override
@@ -89,8 +89,8 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
     @Override
     public void onConfirmBtnPress(Button button) {
         JSONObject craftingRecipe = null;
-        if (currentType == ToggleCraftingTypeButton.Type.crafting_shaped)craftingRecipe = JsonManager.genCraftingShapedRecipe(container.craftTableSlots, groupNameInput.getText());
-        if (currentType == ToggleCraftingTypeButton.Type.crafting_shapeless)craftingRecipe = JsonManager.genCraftingShapelessRecipe(container.craftTableSlots,groupNameInput.getText());
+        if (currentType == ToggleCraftingTypeButton.Type.crafting_shaped)craftingRecipe = VanillaRecipeJson.genCraftingShapedRecipe(container.craftTableSlots, groupNameInput.getText());
+        if (currentType == ToggleCraftingTypeButton.Type.crafting_shapeless)craftingRecipe = VanillaRecipeJson.genCraftingShapelessRecipe(container.craftTableSlots,groupNameInput.getText());
         jsonPacket.put("json_recipe",craftingRecipe);
         jsonPacket.put("recipe_name",recipeNameInput.getText());
         jsonPacket.put("crud","create");
@@ -113,7 +113,7 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks,mouseX,mouseY);
-        this.minecraft.getTextureManager().bindTexture(this.SCREEN_TEXTURE);
+        this.minecraft.getTextureManager().bindTexture(this.SIDE_INFO_TEXTURE);
         if (isToggleCraftingBtnHovered) blit(guiLeft+88, guiTop+28, 28, 198,28, 28, textureWidth, textureHeight);
         if (currentType == ToggleCraftingTypeButton.Type.crafting_shaped) blit(guiLeft+88, guiTop+28, 0, 226,28, 28, textureWidth, textureHeight);
         if (currentType == ToggleCraftingTypeButton.Type.crafting_shapeless) blit(guiLeft+88, guiTop+28, 0, 198,28, 28, textureWidth, textureHeight);

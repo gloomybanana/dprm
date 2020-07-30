@@ -10,7 +10,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.file.VanillaRecipeJson;
 import java.util.function.Supplier;
 
 public class CRUDRecipe {
@@ -46,14 +46,14 @@ public class CRUDRecipe {
         String recipe_name = jsonPacket.getString("recipe_name");
         //创建json文件
         if (jsonPacket.getString("crud").equals("create")){
-            JSONObject result = JsonManager.createJsonFile(jsonPacket,json_recipe,recipe_name);
+            JSONObject result = VanillaRecipeJson.createJsonFile(jsonPacket,json_recipe,recipe_name);
             if (result.getBoolean("success")){
                 serverPlayer.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_successed",result.getString("dir")));
             }
             else { serverPlayer.sendMessage(new TranslationTextComponent("gui."+ DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir"))); }
         }
         if (jsonPacket.getString("crud").equals("delete")) {
-            String result = JsonManager.deleteJsonFile(jsonPacket);
+            String result = VanillaRecipeJson.deleteJsonFile(jsonPacket);
             serverPlayer.sendMessage(new StringTextComponent(result));
         }
 

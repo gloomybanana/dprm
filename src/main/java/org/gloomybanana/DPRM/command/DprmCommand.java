@@ -8,33 +8,37 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.gloomybanana.DPRM.containerprovider.FurnaceContainerProvider;
-import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.containerprovider.vanilla.RecipeListContainerProvider;
+import org.gloomybanana.DPRM.file.VanillaRecipeJson;
 
-import java.io.File;
 import java.io.IOException;
 
-public class FurnaceCommand implements Command<CommandSource> {
-    public static FurnaceCommand instance = new FurnaceCommand();
 
+public class DprmCommand implements Command<CommandSource> {
+    public static DprmCommand instance = new DprmCommand();
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity serverPlayer = context.getSource().asPlayer();
         String datapacksDirPath = serverPlayer.getServerWorld().getSaveHandler().getWorldDirectory().getPath() + "\\datapacks";
         JSONObject jsonPacket = new JSONObject(true);
-        jsonPacket.put("player_name",serverPlayer.getName().getFormattedText());
-        jsonPacket.put("datapacks_dir_path",datapacksDirPath);
+         JSONObject player = new JSONObject(true);
+         player.put("name",serverPlayer.getName().getString());
+         player.put("is_op",serverPlayer.hasPermissionLevel(2));
+         player.put("datapack_path",datapacksDirPath);
+        jsonPacket.put("player",player);
         jsonPacket.put("select_recipe_name","");
         jsonPacket.put("current_page",1);
         try {
-            jsonPacket.put("recipe_list", JsonManager.getAllRecipes(jsonPacket));
+            jsonPacket.put("recipe_list", VanillaRecipeJson.getAllRecipes(jsonPacket));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        NetworkHooks.openGui(serverPlayer,new FurnaceContainerProvider(), (PacketBuffer packetBuffer) -> {
+        NetworkHooks.openGui(serverPlayer,new RecipeListContainerProvider(), (PacketBuffer packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;
     }
+
+
 }

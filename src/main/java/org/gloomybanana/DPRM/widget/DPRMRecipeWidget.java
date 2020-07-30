@@ -2,7 +2,6 @@ package org.gloomybanana.DPRM.widget;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -17,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.file.VanillaRecipeJson;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 
@@ -42,7 +41,7 @@ public class DPRMRecipeWidget extends Widget {
         super.renderButton(mouseX, mouseY, partTick);
         Minecraft.getInstance().getTextureManager().bindTexture(RECIPE_BOOK);
         this.blit(this.x, this.y, 29, 206, 25, 25);
-        String result_name = JsonManager.getResultName(recipe.getJSONObject("content"));
+        String result_name = VanillaRecipeJson.getResultName(recipe.getJSONObject("content"));
         resultItemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(result_name)));
         Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(resultItemStack,this.x+4,this.y+4);
     }

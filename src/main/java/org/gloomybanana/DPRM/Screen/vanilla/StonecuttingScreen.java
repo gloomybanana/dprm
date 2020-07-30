@@ -1,8 +1,7 @@
-package org.gloomybanana.DPRM.Screen;
+package org.gloomybanana.DPRM.Screen.vanilla;
 
 import com.alibaba.fastjson.JSONObject;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -11,20 +10,20 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import org.gloomybanana.DPRM.container.StonecuttingContainer;
-import org.gloomybanana.DPRM.file.JsonManager;
+import org.gloomybanana.DPRM.container.vanilla.StonecuttingContainer;
+import org.gloomybanana.DPRM.file.VanillaRecipeJson;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.CRUDRecipe;
 
-public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingContainer> {
+public class StonecuttingScreen extends ScreenWithRecipeInfo<StonecuttingContainer> {
 
     Boolean isResultSlotEmpty = true;
     Boolean isCraftingSlotEmpty = true;
 
     public StonecuttingScreen(StonecuttingContainer stonecuttingContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(stonecuttingContainer, inv, titleIn);
-        SCREEN_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/stonecutting.png");
+        SIDE_INFO_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/stonecutting.png");
     }
 
     @Override
@@ -80,7 +79,7 @@ public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingCo
 
     @Override
     public void onConfirmBtnPress(Button button) {
-        JSONObject stonecuttingRecipe = JsonManager.genStonecuttingRecipe(container.stonecuttingSlots, groupNameInput.getText());
+        JSONObject stonecuttingRecipe = VanillaRecipeJson.genStonecuttingRecipe(container.stonecuttingSlots, groupNameInput.getText());
         jsonPacket.put("json_recipe",stonecuttingRecipe);
         jsonPacket.put("recipe_name",recipeNameInput.getText());
         jsonPacket.put("crud","create");

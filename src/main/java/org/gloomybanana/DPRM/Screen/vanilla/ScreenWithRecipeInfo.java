@@ -1,4 +1,4 @@
-package org.gloomybanana.DPRM.Screen;
+package org.gloomybanana.DPRM.Screen.vanilla;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -18,7 +18,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.container.AbstractRecipeContainer;
+import org.gloomybanana.DPRM.container.ContainerWithPlayerInventory;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.lwjgl.glfw.GLFW;
@@ -26,10 +26,10 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extends ContainerScreen<T> implements IContainerListener {
+public abstract class ScreenWithRecipeInfo<T extends ContainerWithPlayerInventory> extends ContainerScreen<T> implements IContainerListener {
     protected final T container;
     protected final JSONObject jsonPacket;
-    protected ResourceLocation SCREEN_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/empty_recipe_screen.png");
+    protected ResourceLocation SIDE_INFO_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/side_recipe_info.png");
     protected final ResourceLocation BACK_TO_RECIPE_LIST_BTN = new ResourceLocation(DPRM.MOD_ID,"textures/gui/back_to_recipe_list_btn.png");
     protected final ResourceLocation DELETE_BTN = new ResourceLocation(DPRM.MOD_ID,"textures/gui/delete_btn.png");
     protected final Integer textureWidth = 300;
@@ -48,7 +48,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
     Boolean isGroupNameEmpty = true;
     Boolean isRecipeJsonExist = false;
 
-    public AbstractRecipeMakerScreen(T container, PlayerInventory inv, ITextComponent titleIn) {
+    public ScreenWithRecipeInfo(T container, PlayerInventory inv, ITextComponent titleIn) {
         super(container, inv, titleIn);
         this.container =container;
         this.jsonPacket = JSON.parseObject(container.getPacketBuffier().readString());
@@ -157,15 +157,15 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.renderBackground();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         assert this.minecraft != null;
-        this.minecraft.getTextureManager().bindTexture(SCREEN_TEXTURE);
+        this.minecraft.getTextureManager().bindTexture(SIDE_INFO_TEXTURE);
         //背景渲染
-        blit(guiLeft, guiTop, 0, 0,176, 166, textureWidth, textureHeight);
+        blit(guiLeft, guiTop, 0, 0,176, 166, 300, 300);
         //侧边栏背景渲染
-        blit(guiLeft - 98, guiTop + 4,202, 0, 98, 107, textureWidth, textureHeight);
+        blit(guiLeft - 98, guiTop + 4,202, 0, 98, 107, 300, 300);
         //配方名输入框背景渲染
-        blit(guiLeft - 85, guiTop + 11, 0, 166 + (this.recipeNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
+        blit(guiLeft - 85, guiTop + 11, 0, 166 + (this.recipeNameInput.isFocused() ? 0 : 16), 80, 15, 300, 300);
         //组名输入框背景渲染
-        blit(guiLeft - 85, guiTop + 27, 0, 166 + (this.groupNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
+        blit(guiLeft - 85, guiTop + 27, 0, 166 + (this.groupNameInput.isFocused() ? 0 : 16), 80, 15, 300, 300);
         //输入框placeholder
         if (isRecipeNameEmpty)this.font.drawString(recipeNameInput.getMessage(),guiLeft - 82,guiTop + 14, 0xFF777777);
         if (isGroupNameEmpty)this.font.drawString(groupNameInput.getMessage(),guiLeft - 82,guiTop + 30,0xFF777777);
@@ -224,34 +224,10 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         }
     }
 
-    private List<String> getCurrentTypeTooltips(String currentType) {
-        List<String> tooltips = new ArrayList<>();
-        switch (currentType) {
-            case "minecraft:crafting_shaped":
-            case "minecraft:crafting_shapeless":
-                tooltips.add(I18n.format("gui." + DPRM.MOD_ID + ".this_is_a_crafting_recipe"));
-                return tooltips;
-            case "smelting":
-            case "smoking":
-            case "blasting":
-            case "campfire_cooking":
-                tooltips.add(I18n.format("gui." + DPRM.MOD_ID + ".this_is_a_furnace_recipe"));
-                return tooltips;
-            case "stonecutting":
-                tooltips.add(I18n.format("gui." + DPRM.MOD_ID + ".this_is_a_stonecutting_recipe"));
-                return tooltips;
-            default:
-                tooltips.add("other");
-                break;
-        }
-        return tooltips;
-    }
-
 
     //确认按钮
-    public void onConfirmBtnPress(Button button){
+    public abstract void onConfirmBtnPress(Button button);
 
-    };
 
     @Override
     public void sendAllContents(Container containerToSend, NonNullList<ItemStack> itemsList) {

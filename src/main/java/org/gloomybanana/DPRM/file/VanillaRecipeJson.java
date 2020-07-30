@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class JsonManager {
+public class VanillaRecipeJson {
     /**
      * 创建数据包
      * @param jsonPacket jsonPacket
@@ -38,6 +38,12 @@ public class JsonManager {
         return pack_mcmeta.getParentFile();
     }
 
+    /**
+     * 查询所有已存在配方
+     * @param jsonPacket
+     * @return 配方json数组
+     * @throws IOException
+     */
     public static JSONArray getAllRecipes(JSONObject jsonPacket) throws IOException {
         JSONArray jsonArray = new JSONArray();
         String player_name = jsonPacket.getString("player_name");

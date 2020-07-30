@@ -1,17 +1,15 @@
-package org.gloomybanana.DPRM.containerprovider;
+package org.gloomybanana.DPRM.containerprovider.vanilla;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.container.StonecuttingContainer;
+import org.gloomybanana.DPRM.container.vanilla.StonecuttingContainer;
 
 import javax.annotation.Nullable;
 

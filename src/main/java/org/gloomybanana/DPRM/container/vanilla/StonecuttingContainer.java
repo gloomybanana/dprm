@@ -1,4 +1,4 @@
-package org.gloomybanana.DPRM.container;
+package org.gloomybanana.DPRM.container.vanilla;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
@@ -6,12 +6,11 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.network.PacketBuffer;
-import org.gloomybanana.DPRM.hander.Registry;
+import org.gloomybanana.DPRM.container.ContainerWithPlayerInventory;
+import org.gloomybanana.DPRM.container.SingleSlot;
+import org.gloomybanana.DPRM.handler.Registry;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class StonecuttingContainer extends AbstractRecipeContainer {
+public class StonecuttingContainer extends ContainerWithPlayerInventory {
 
     public CraftingInventory craftMatrix = new SingleSlot(this, 3, 3);
     public IInventory craftResult = new CraftResultInventory();
