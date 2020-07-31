@@ -8,8 +8,8 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.gloomybanana.DPRM.containerprovider.vanilla.RecipeListContainerProvider;
-import org.gloomybanana.DPRM.file.VanillaRecipeJson;
+import org.gloomybanana.DPRM.containerprovider.vanilla.MenuContainerProvider;
+import org.gloomybanana.DPRM.dao.VanillaRecipeJson;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class DprmCommand implements Command<CommandSource> {
             e.printStackTrace();
         }
 
-        NetworkHooks.openGui(serverPlayer,new RecipeListContainerProvider(), (PacketBuffer packetBuffer) -> {
+        NetworkHooks.openGui(serverPlayer,new MenuContainerProvider(), (PacketBuffer packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;

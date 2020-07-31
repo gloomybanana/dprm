@@ -10,7 +10,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.file.VanillaRecipeJson;
+import org.gloomybanana.DPRM.dao.VanillaRecipeJson;
 import java.util.function.Supplier;
 
 public class CRUDRecipe {

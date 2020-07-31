@@ -1,4 +1,4 @@
-package org.gloomybanana.DPRM.file;
+package org.gloomybanana.DPRM.dao;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -13,7 +13,6 @@ import org.gloomybanana.DPRM.DPRM;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class VanillaRecipeJson {
@@ -24,8 +23,8 @@ public class VanillaRecipeJson {
      * @throws IOException
      */
     private static File createDatapack(JSONObject jsonPacket) throws IOException {
-        String player_name = jsonPacket.getString("player_name");
-        String datapacks_dir_path = jsonPacket.getString("datapacks_dir_path");
+        String player_name = jsonPacket.getJSONObject("player").getString("name");
+        String datapacks_dir_path = jsonPacket.getJSONObject("player").getString("datapack_path");
         File pack_mcmeta = new File(datapacks_dir_path+"\\add_by_"+player_name+"\\pack.mcmeta");
         if (!pack_mcmeta.exists()){
             boolean mkdirs = pack_mcmeta.getParentFile().mkdirs();
@@ -46,9 +45,9 @@ public class VanillaRecipeJson {
      */
     public static JSONArray getAllRecipes(JSONObject jsonPacket) throws IOException {
         JSONArray jsonArray = new JSONArray();
-        String player_name = jsonPacket.getString("player_name");
-        String datapacks_dir_path = jsonPacket.getString("datapacks_dir_path");
-        File datapack_path = new File(datapacks_dir_path+"\\add_by_"+player_name);
+        String player_name = jsonPacket.getJSONObject("player").getString("name");
+        String datapacks_dir_path = jsonPacket.getJSONObject("player").getString("datapack_path");
+        File datapack_path = new File(datapacks_dir_path+"//add_by_"+player_name);
         File minecraftRecipesDir = new File(datapack_path + "//data//minecraft//recipes");
         if (!minecraftRecipesDir.exists())return jsonArray;
         for (File file : minecraftRecipesDir.listFiles()) {
@@ -121,16 +120,16 @@ public class VanillaRecipeJson {
 
     public static String deleteJsonFile(JSONObject jsonPacket){
 
-        String player_name = jsonPacket.getString("player_name");
+        String player_name = jsonPacket.getJSONObject("player").getString("name");
         String select_recipe_name = jsonPacket.getString("select_recipe_name");
-        String datapacks_dir_path = jsonPacket.getString("datapacks_dir_path");
+        String datapacks_dir_path = jsonPacket.getJSONObject("player").getString("datapack_path");
         File datapack_path = new File(datapacks_dir_path+"\\add_by_"+player_name);
         File select_recipe_json = new File(datapack_path + "//data//minecraft//recipes//"+select_recipe_name+".json");
         if (select_recipe_json.exists()) {
             boolean delete = select_recipe_json.delete();
-            return I18n.format("chat."+ DPRM.MOD_ID+".delete_success");
+            return I18n.format("gui."+ DPRM.MOD_ID+".chat.delete_success");
         }
-        return I18n.format("chat."+ DPRM.MOD_ID+".delete_failed");
+        return I18n.format("gui."+ DPRM.MOD_ID+".chat.delete_failed");
     }
 
     /**

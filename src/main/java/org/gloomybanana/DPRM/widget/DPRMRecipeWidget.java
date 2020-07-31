@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.gloomybanana.DPRM.file.VanillaRecipeJson;
+import org.gloomybanana.DPRM.dao.VanillaRecipeJson;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 

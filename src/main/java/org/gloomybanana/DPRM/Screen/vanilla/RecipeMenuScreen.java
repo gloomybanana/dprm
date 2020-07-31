@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.vanilla.RecipeMenuContainer;
-import org.gloomybanana.DPRM.file.VanillaRecipeJson;
+import org.gloomybanana.DPRM.dao.VanillaRecipeJson;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.gloomybanana.DPRM.widget.DPRMRecipeWidget;
@@ -20,7 +20,7 @@ import org.gloomybanana.DPRM.widget.DPRMRecipeWidget;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeListScreen extends ContainerScreen<RecipeMenuContainer> {
+public class RecipeMenuScreen extends ContainerScreen<RecipeMenuContainer> {
     protected final RecipeMenuContainer container;
     protected final JSONObject jsonPacket;
     protected ResourceLocation SCREEN_TEXTURE = new ResourceLocation(DPRM.MOD_ID, "textures/gui/recipe_list.png");
@@ -40,15 +40,15 @@ public class RecipeListScreen extends ContainerScreen<RecipeMenuContainer> {
     protected final Integer textureWidth = 300;
     protected final Integer textureHeight = 300;
 
-    public RecipeListScreen(RecipeMenuContainer container, PlayerInventory inv, ITextComponent titleIn) {
+    public RecipeMenuScreen(RecipeMenuContainer container, PlayerInventory inv, ITextComponent titleIn) {
         super(container, inv, titleIn);
         this.guiTop = (this.height - this.ySize) / 2;
+        this.guiLeft = (this.width - this.xSize) / 2;
         this.container = container;
         this.jsonPacket = JSON.parseObject(container.getPacketBuffer().readString());
         DPRM.LOGGER.info("Send From Server:"+this.jsonPacket);
         this.xSize = 148;
         this.ySize = 167;
-        this.guiLeft = (this.width - this.xSize) / 2;
 
         this.current_page = jsonPacket.getInteger("current_page");
         this.total_pages = jsonPacket.getJSONArray("recipe_list").size()/20+1;

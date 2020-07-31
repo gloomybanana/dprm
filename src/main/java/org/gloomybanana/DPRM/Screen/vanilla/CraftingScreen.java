@@ -13,7 +13,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.vanilla.CraftingContainer;
-import org.gloomybanana.DPRM.file.VanillaRecipeJson;
+import org.gloomybanana.DPRM.dao.VanillaRecipeJson;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.gloomybanana.DPRM.network.CRUDRecipe;

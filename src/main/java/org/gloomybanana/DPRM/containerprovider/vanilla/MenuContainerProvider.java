@@ -13,7 +13,7 @@ import org.gloomybanana.DPRM.container.vanilla.RecipeMenuContainer;
 
 import javax.annotation.Nullable;
 
-public class RecipeListContainerProvider implements INamedContainerProvider {
+public class MenuContainerProvider implements INamedContainerProvider {
 
     @Override
     public ITextComponent getDisplayName() {

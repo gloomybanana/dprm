@@ -10,9 +10,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.containerprovider.vanilla.CraftingContainerProvider;
 import org.gloomybanana.DPRM.containerprovider.vanilla.FurnaceContainerProvider;
-import org.gloomybanana.DPRM.containerprovider.vanilla.RecipeListContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.vanilla.MenuContainerProvider;
 import org.gloomybanana.DPRM.containerprovider.vanilla.StonecuttingContainerProvider;
-import org.gloomybanana.DPRM.file.VanillaRecipeJson;
+import org.gloomybanana.DPRM.dao.VanillaRecipeJson;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -72,7 +72,7 @@ public class ScreenToggle {
             });
         }
         if (jsonPacket.getString("operate").equals("open_recipe_list_screen")){
-            NetworkHooks.openGui(serverPlayer,new RecipeListContainerProvider(), (PacketBuffer packetBuffer) -> {
+            NetworkHooks.openGui(serverPlayer,new MenuContainerProvider(), (PacketBuffer packetBuffer) -> {
                 packetBuffer.writeString(jsonPacket.toJSONString());
             });
         }

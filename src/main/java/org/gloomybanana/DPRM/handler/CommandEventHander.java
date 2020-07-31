@@ -16,12 +16,18 @@ public class CommandEventHander {
     public static void onServerStarting(FMLServerStartingEvent event){
 
         Boolean onlyOperatorCanUse = Config.VALUE.get();
-        Integer permissionLevel = onlyOperatorCanUse?2:0;
+        int permissionLevel = onlyOperatorCanUse?2:0;
 
         //命令节点"dprm"
         LiteralArgumentBuilder<CommandSource> dprm = Commands.literal("dprm");
         dprm.requires((commandSource)-> commandSource.hasPermissionLevel(permissionLevel));
         dprm.executes(DprmCommand.instance);
+
+        //命令节点"loot_table"
+        LiteralArgumentBuilder<CommandSource> loot_table = Commands.literal("loot_table");
+        loot_table.requires((commandSource -> commandSource.hasPermissionLevel(permissionLevel)));
+        loot_table.executes(DprmLootTableCommand.instance);
+        dprm.then(loot_table);
 
         //注册命令
         CommandDispatcher<CommandSource> commandDispatcher = event.getCommandDispatcher();

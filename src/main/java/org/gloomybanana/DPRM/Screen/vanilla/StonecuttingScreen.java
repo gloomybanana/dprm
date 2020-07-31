@@ -11,7 +11,7 @@ import org.gloomybanana.DPRM.DPRM;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import org.gloomybanana.DPRM.container.vanilla.StonecuttingContainer;
-import org.gloomybanana.DPRM.file.VanillaRecipeJson;
+import org.gloomybanana.DPRM.dao.VanillaRecipeJson;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.CRUDRecipe;
