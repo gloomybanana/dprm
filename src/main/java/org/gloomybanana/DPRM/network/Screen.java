@@ -3,7 +3,7 @@ package org.gloomybanana.DPRM.network;
 import com.alibaba.fastjson.JSONObject;
 
 public enum Screen {
-    recipeListScreen,craftingScreen,furnaceScreen,stonecuttingScreen;
+    recipeListScreen,craftingScreen,furnaceScreen,stonecuttingScreen,smithingScreen;
     public void jumpTo(JSONObject jsonPacket){
         switch (this){
             default:
@@ -21,6 +21,10 @@ public enum Screen {
             };
             case stonecuttingScreen: {
                 jsonPacket.put("operate","open_stonecutting_screen");
+                Networking.INSTANCE.sendToServer(new ScreenToggle(jsonPacket.toJSONString()));
+            };
+            case smithingScreen: {
+                jsonPacket.put("operate","open_smithing_screen");
                 Networking.INSTANCE.sendToServer(new ScreenToggle(jsonPacket.toJSONString()));
             };
         }

@@ -18,9 +18,9 @@ public class CraftingCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity serverPlayer = context.getSource().asPlayer();
-        String datapacksDirPath = serverPlayer.getServerWorld().getSaveHandler().getWorldDirectory().getPath() + "\\datapacks";
+        String datapacksDirPath = JsonManager.getWorldFolder(serverPlayer.getServerWorld()).getPath() + "\\datapacks";
         JSONObject jsonPacket = new JSONObject(true);
-        jsonPacket.put("player_name",serverPlayer.getName().getFormattedText());
+        jsonPacket.put("player_name",serverPlayer.getName().getString());
         jsonPacket.put("datapacks_dir_path",datapacksDirPath);
         jsonPacket.put("select_recipe_name","");
         jsonPacket.put("current_page",1);

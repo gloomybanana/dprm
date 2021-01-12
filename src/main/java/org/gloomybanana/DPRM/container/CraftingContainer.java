@@ -15,9 +15,9 @@ public class CraftingContainer extends AbstractRecipeContainer {
     public Slot[] craftTableSlots = new Slot[10];
     public CraftingContainer(int id, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
         super(Registry.craftingContainer.get(),id,playerInventory,packetBuffer);
-        //产物插槽
+
         craftTableSlots[0] = this.addSlot(new Slot(this.craftResult, 0, 124, 35));
-        //3x3合成栏插槽
+
         craftTableSlots[1] = this.addSlot(new Slot(this.craftMatrix, 0, 30 + 0 * 18, 17 + 0 * 18));
         craftTableSlots[2] = this.addSlot(new Slot(this.craftMatrix, 1, 30 + 1 * 18, 17 + 0 * 18));
         craftTableSlots[3] = this.addSlot(new Slot(this.craftMatrix, 2, 30 + 2 * 18, 17 + 0 * 18));

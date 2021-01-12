@@ -4,6 +4,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.StringTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 
 public class ToggleCraftingTypeButton extends Button {
@@ -11,7 +12,7 @@ public class ToggleCraftingTypeButton extends Button {
   public Type type;
 
   public ToggleCraftingTypeButton(int widthIn, int heightIn, int width, int height, IPressable onPress, Type type) {
-    super(widthIn, heightIn, width, height, "", onPress);
+    super(widthIn, heightIn, width, height, new StringTextComponent(""), onPress);
     this.type = type;
   }
 

@@ -3,6 +3,7 @@ package org.gloomybanana.DPRM.Screen;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -11,6 +12,8 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.FurnaceContainer;
@@ -44,7 +47,7 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
         //侧边栏组件初始化
         super.init();
         //经验
-        this.experienceInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 47, 24, 12, I18n.format("gui."+DPRM.MOD_ID+".furnance.experience"));
+        this.experienceInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 47, 24, 12,new TranslationTextComponent("gui."+DPRM.MOD_ID+".furnance.experience"));
         this.experienceInput.setCanLoseFocus(true);
         this.experienceInput.setTextColor(-1);
         this.experienceInput.setDisabledTextColour(0x808080);
@@ -54,7 +57,7 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
         experienceInput.setText("0.35");
         this.children.add(this.experienceInput);
         //时间
-        this.cookingTimeInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 63, 24, 12,I18n.format("gui."+DPRM.MOD_ID+".furnance.cooking_time"));
+        this.cookingTimeInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 63, 24, 12,new TranslationTextComponent("gui."+DPRM.MOD_ID+".furnance.cooking_time"));
         this.cookingTimeInput.setCanLoseFocus(true);
         this.cookingTimeInput.setTextColor(-1);
         this.cookingTimeInput.setDisabledTextColour(0x808080);
@@ -110,44 +113,42 @@ public class FurnaceScreen extends AbstractRecipeMakerScreen<FurnaceContainer>{
 
     Boolean isToggleBtnHovered = false;
     @Override
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        super.renderHoveredToolTip(mouseX, mouseY);
+    protected void renderHoveredTooltip(MatrixStack matrixStack,int mouseX, int mouseY) {
+        super.renderHoveredTooltip(matrixStack,mouseX, mouseY);
         //判断是否悬停在切换按钮
-        List<String> toggleFurnaceToolTips = new ArrayList<>();
-        toggleFurnaceToolTips.add(I18n.format("gui."+ DPRM.MOD_ID+".toggle_furnace_type"));
         if ((mouseX>=guiLeft+55)&&(mouseX<=guiLeft+55+18)&&(mouseY>=guiTop+53)&&(mouseY<=guiTop+53+18)){
-            this.renderTooltip(toggleFurnaceToolTips,mouseX,mouseY);
+            this.renderTooltip(matrixStack,new TranslationTextComponent("gui."+ DPRM.MOD_ID+".toggle_furnace_type"),mouseX,mouseY);
             isToggleBtnHovered = true;
         }else isToggleBtnHovered =false;
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack,float partialTicks, int mouseX, int mouseY) {
         //绘制Container背景,侧边栏组件
-        super.drawGuiContainerBackgroundLayer(partialTicks,mouseX,mouseY);
+        super.drawGuiContainerBackgroundLayer(matrixStack,partialTicks,mouseX,mouseY);
         this.minecraft.getTextureManager().bindTexture(this.SCREEN_TEXTURE);
         //烧制时间、经验背景框
-        blit( guiLeft - 85,  guiTop + 43, 0, 198, 24, 15, textureWidth, textureHeight);
-        blit( guiLeft - 85,  guiTop + 59, 0, 198, 24, 15, textureWidth, textureHeight);
+        blit(matrixStack, guiLeft - 85,  guiTop + 43, 0, 198, 24, 15, textureWidth, textureHeight);
+        blit(matrixStack, guiLeft - 85,  guiTop + 59, 0, 198, 24, 15, textureWidth, textureHeight);
         //经验,时间文字
-        if (isToggleBtnHovered)blit(guiLeft+54,guiTop+52,176,0,20,20,textureWidth,textureHeight);
-        this.font.drawString(I18n.format("gui."+DPRM.MOD_ID+".furnance.experience"), guiLeft-59, guiTop+46, 0xFF222222);
-        this.font.drawString(I18n.format("gui."+DPRM.MOD_ID+".furnance.cooking_time"), guiLeft-59, guiTop+62,0xFF222222);
+        if (isToggleBtnHovered)blit(matrixStack,guiLeft+54,guiTop+52,176,0,20,20,textureWidth,textureHeight);
+        this.font.drawString(matrixStack,new TranslationTextComponent("gui."+DPRM.MOD_ID+".furnance.experience").getString(), guiLeft-59, guiTop+46, 0xFF222222);
+        this.font.drawString(matrixStack,new TranslationTextComponent("gui."+DPRM.MOD_ID+".furnance.cooking_time").getString(), guiLeft-59, guiTop+62,0xFF222222);
         //图标
         this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(currentType.getIcon(),guiLeft+56,guiTop+54);
     }
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack,int mouseX, int mouseY) {
         //绘制背包名称
-        super.drawGuiContainerForegroundLayer(mouseX,mouseY);
+        super.drawGuiContainerForegroundLayer(matrixStack,mouseX,mouseY);
         //标题文字
         String s = currentType.getTitle();
-        this.font.drawString(s, (float)(this.xSize / 2 - this.font.getStringWidth(s) / 2), 6.0F, 4210752);
+        this.font.drawString(matrixStack,s, (float)(this.xSize / 2 - this.font.getStringWidth(s) / 2), 6.0F, 4210752);
     }
     @Override
-    public void render(int mouseX, int mouseY, float particleTick) {
-        super.render(mouseX, mouseY, particleTick);
-        this.experienceInput.render(mouseX,mouseY,particleTick);
-        this.cookingTimeInput.render(mouseX,mouseY,particleTick);
+    public void render(MatrixStack matrixStack,int mouseX, int mouseY, float particleTick) {
+        super.render(matrixStack,mouseX, mouseY, particleTick);
+        this.experienceInput.render(matrixStack,mouseX,mouseY,particleTick);
+        this.cookingTimeInput.render(matrixStack,mouseX,mouseY,particleTick);
         if (isRecipeJsonExist){
             renderFakeRecipe();
             if (recipeNameInput!=null){

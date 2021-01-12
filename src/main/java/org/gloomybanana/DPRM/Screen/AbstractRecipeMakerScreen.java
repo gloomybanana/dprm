@@ -3,6 +3,7 @@ package org.gloomybanana.DPRM.Screen;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -17,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.AbstractRecipeContainer;
 import org.gloomybanana.DPRM.network.Networking;
@@ -59,7 +62,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
     protected void init() {
         super.init();
         //配方名输入框
-        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 15, 80, 12, I18n.format("gui."+ DPRM.MOD_ID+".recipe_info.recipe_name"));//字体，位置，宽高，信息
+        this.recipeNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 15, 80, 12, new TranslationTextComponent("gui."+ DPRM.MOD_ID+".recipe_info.recipe_name"));//字体，位置，宽高，信息
         this.recipeNameInput.setTextColor(-1);
         this.recipeNameInput.setDisabledTextColour(-1);
         this.recipeNameInput.setEnableBackgroundDrawing(false);
@@ -69,7 +72,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         this.recipeNameInput.setText(jsonPacket.getString("select_recipe_name"));
         this.recipeNameInput.setResponder(this::recipeNameinputResponder);//每次输入后的回调函数
         //组名输入框
-        this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 31, 80, 12, I18n.format("gui."+DPRM.MOD_ID+".recipe_info.group_name"));//字体，位置，宽高，信息
+        this.groupNameInput = new TextFieldWidget(this.font, guiLeft - 82, guiTop + 31, 80, 12, new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.group_name"));//字体，位置，宽高，信息
         this.groupNameInput.setTextColor(-1);
         this.groupNameInput.setDisabledTextColour(-1);
         this.groupNameInput.setEnableBackgroundDrawing(false);
@@ -79,7 +82,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
         //监听器
         this.container.addListener(this);
         //按钮初始化
-        this.confirmBtn = new Button(this.guiLeft - 85, this.guiTop + 85, 80, 20, I18n.format("gui."+DPRM.MOD_ID+".recipe_info.add_recipe"), this::onConfirmBtnPress);//位置，宽高，文字，按下后回调函数
+        this.confirmBtn = new Button(this.guiLeft - 85, this.guiTop + 85, 80, 20,new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.add_recipe"), this::onConfirmBtnPress);//位置，宽高，文字，按下后回调函数
         this.backBtn = new ImageButton(guiLeft + 145, guiTop + 5, 26, 16, 0, 0, 16, BACK_TO_RECIPE_LIST_BTN, this::backToRecipeList);
         this.deleteBtn = new ImageButton(guiLeft + 5, guiTop + 5, 16, 16, 0, 0, 16, DELETE_BTN, this::deleteRecipe);
 
@@ -113,10 +116,10 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
             }
         }
         if (isRecipeJsonExist) {
-            this.confirmBtn.setMessage(I18n.format("gui."+DPRM.MOD_ID+".recipe_info.update_recipe"));
+            this.confirmBtn.setMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.update_recipe"));
 
         } else {
-            this.confirmBtn.setMessage(I18n.format("gui."+DPRM.MOD_ID+".recipe_info.add_recipe"));
+            this.confirmBtn.setMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.add_recipe"));
         }
         deleteBtn.visible = isRecipeJsonExist;
         deleteBtn.active = isRecipeJsonExist;
@@ -129,7 +132,7 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
     }
 
     public void removed() {
-        super.removed();
+//        super.removed();
         this.minecraft.keyboardListener.enableRepeatEvents(false);
         this.container.removeListener(this);
     }
@@ -153,74 +156,62 @@ public class AbstractRecipeMakerScreen<T extends AbstractRecipeContainer> extend
 
     //渲染背景
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.renderBackground();
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(matrixStack);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(SCREEN_TEXTURE);
         //背景渲染
-        blit(guiLeft, guiTop, 0, 0,176, 166, textureWidth, textureHeight);
+        blit(matrixStack,guiLeft, guiTop, 0, 0,176, 166, textureWidth, textureHeight);
         //侧边栏背景渲染
-        blit(guiLeft - 98, guiTop + 4,202, 0, 98, 107, textureWidth, textureHeight);
+        blit(matrixStack,guiLeft - 98, guiTop + 4,202, 0, 98, 107, textureWidth, textureHeight);
         //配方名输入框背景渲染
-        blit(guiLeft - 85, guiTop + 11, 0, 166 + (this.recipeNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
+        blit(matrixStack,guiLeft - 85, guiTop + 11, 0, 166 + (this.recipeNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
         //组名输入框背景渲染
-        blit(guiLeft - 85, guiTop + 27, 0, 166 + (this.groupNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
+        blit(matrixStack,guiLeft - 85, guiTop + 27, 0, 166 + (this.groupNameInput.isFocused() ? 0 : 16), 80, 15, textureWidth, textureHeight);
         //输入框placeholder
-        if (isRecipeNameEmpty)this.font.drawString(recipeNameInput.getMessage(),guiLeft - 82,guiTop + 14, 0xFF777777);
-        if (isGroupNameEmpty)this.font.drawString(groupNameInput.getMessage(),guiLeft - 82,guiTop + 30,0xFF777777);
+        if (isRecipeNameEmpty)this.font.drawString(matrixStack,recipeNameInput.getMessage().getString(),guiLeft - 82,guiTop + 14, 0xFF777777);
+        if (isGroupNameEmpty)this.font.drawString(matrixStack,groupNameInput.getMessage().getString(),guiLeft - 82,guiTop + 30,0xFF777777);
     }
     //渲染GUI内静态文字
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float)(this.ySize - 96 + 2), 4210752);
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack,int mouseX, int mouseY) {
+        this.font.drawString(matrixStack,this.playerInventory.getDisplayName().getString(), 8.0F, (float)(this.ySize - 96 + 2), 4210752);
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float particleTick) {
-        super.render(mouseX, mouseY, particleTick);
+    public void render(MatrixStack matrixStack,int mouseX, int mouseY, float particleTick) {
+        super.render(matrixStack,mouseX, mouseY, particleTick);
         //渲染组件
-        this.recipeNameInput.render(mouseX, mouseY, particleTick);
-        this.groupNameInput.render(mouseX, mouseY, particleTick);
-        this.confirmBtn.render(mouseX,mouseY,particleTick);
-        this.backBtn.render(mouseX,mouseY,particleTick);
-        this.deleteBtn.render(mouseX,mouseY,particleTick);
+        this.recipeNameInput.render(matrixStack,mouseX, mouseY, particleTick);
+        this.groupNameInput.render(matrixStack,mouseX, mouseY, particleTick);
+        this.confirmBtn.render(matrixStack,mouseX,mouseY,particleTick);
+        this.backBtn.render(matrixStack,mouseX,mouseY,particleTick);
+        this.deleteBtn.render(matrixStack,mouseX,mouseY,particleTick);
         //渲染Tooltips
-        this.renderHoveredToolTip(mouseX, mouseY);
-        ArrayList<String> confirmBtnActiveToolTips = new ArrayList<>();
-        ArrayList<String> confirmBtnDisableToolTips = new ArrayList<>();
-        confirmBtnActiveToolTips.add(I18n.format("gui."+DPRM.MOD_ID+".recipe_info.add_to_datapack"));
-        confirmBtnDisableToolTips.add(I18n.format("gui."+DPRM.MOD_ID+".recipe_info.please_complete_recipe_info"));
+        this.renderHoveredTooltip(matrixStack,mouseX, mouseY);
         if (this.confirmBtn.isHovered()&&!groupNameInput.isFocused()){
             if(this.confirmBtn.active){
-                this.renderTooltip(confirmBtnActiveToolTips,mouseX,mouseY);
-            }else this.renderTooltip(confirmBtnDisableToolTips,mouseX,mouseY);
+                this.renderTooltip(matrixStack,new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.add_to_datapack"),mouseX,mouseY);
+            }else this.renderTooltip(matrixStack,new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.please_complete_recipe_info"),mouseX,mouseY);
         }
-        ArrayList<String> recipeNameInputTooltips = new ArrayList<>();
-        recipeNameInputTooltips.add(recipeNameInput.getMessage());
         if (this.recipeNameInput.isHovered()&&!recipeNameInput.isFocused()){
-            this.renderTooltip(recipeNameInputTooltips,mouseX,mouseY);
+            this.renderTooltip(matrixStack,recipeNameInput.getMessage(),mouseX,mouseY);
         }else if (this.recipeNameInput.isHovered()&&recipeNameInput.isFocused()){
 //            if (isRecipeJsonExist){
 //                String currentType = currentRecipe.getString("type");
 //                this.renderTooltip(getCurrentTypeTooltips(currentType),mouseX,mouseY);
 //            }
         }
-        ArrayList<String> groupNameInputTooltips = new ArrayList<>();
-        groupNameInputTooltips.add(groupNameInput.getMessage());
         if (this.groupNameInput.isHovered()&&!groupNameInput.isFocused()){
-            this.renderTooltip(groupNameInputTooltips,mouseX,mouseY);
+            this.renderTooltip(matrixStack,groupNameInput.getMessage(),mouseX,mouseY);
         }
 
-        ArrayList<String> backBtnTooltips = new ArrayList<>();
-        backBtnTooltips.add(I18n.format("gui."+DPRM.MOD_ID+".recipe_info.back_to_recipe_list"));
         if (this.backBtn.isHovered()){
-            this.renderTooltip(backBtnTooltips,mouseX,mouseY);
+            this.renderTooltip(matrixStack,new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.back_to_recipe_list"),mouseX,mouseY);
         }
 
-        ArrayList<String> deleteBtnTooltips = new ArrayList<>();
-        deleteBtnTooltips.add(I18n.format("gui."+DPRM.MOD_ID+".recipe_info.delete"));
         if (this.deleteBtn.isHovered()){
-            this.renderTooltip(deleteBtnTooltips,mouseX,mouseY);
+            this.renderTooltip(matrixStack,new TranslationTextComponent("gui."+DPRM.MOD_ID+".recipe_info.delete"),mouseX,mouseY);
         }
     }
 

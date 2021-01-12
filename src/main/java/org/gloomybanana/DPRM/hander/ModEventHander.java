@@ -15,6 +15,7 @@ public class ModEventHander {
         ScreenManager.registerFactory(Registry.craftingContainer.get(), CraftingScreen::new);
         ScreenManager.registerFactory(Registry.furnaceContainer.get(), FurnaceScreen::new);
         ScreenManager.registerFactory(Registry.stonecuttingContainer.get(), StonecuttingScreen::new);
+        ScreenManager.registerFactory(Registry.smithingContainer.get(),SmithingScreen::new);
         ScreenManager.registerFactory(Registry.recipeListContainer.get(), RecipeListScreen::new);
     }
     @SubscribeEvent

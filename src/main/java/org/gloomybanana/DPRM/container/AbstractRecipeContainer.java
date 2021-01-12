@@ -17,24 +17,20 @@ public class AbstractRecipeContainer extends Container {
     protected AbstractRecipeContainer(@Nullable ContainerType<?> type, int id, PlayerInventory playerInventory, PacketBuffer packetBuffier) {
         super(type, id);
         this.packetBuffier = packetBuffier;
-        //玩家背包插槽
         layoutPlayerInventorySlots(playerInventory, 8, 84);
     }
 
 
-    //玩家是否能交互
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return true;
     }
 
-    //玩家摁住Shift点击物品槽的行为
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         return ItemStack.EMPTY;
     }
 
-    //玩家物品栏
     private int addSlotRange(IInventory inventory, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
             addSlot(new Slot(inventory, index, x, y));

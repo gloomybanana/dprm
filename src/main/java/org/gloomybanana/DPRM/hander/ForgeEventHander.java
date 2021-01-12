@@ -11,8 +11,5 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeEventHander {
-    @SubscribeEvent
-    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event){
 
-    }
 }

@@ -1,5 +1,6 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[34,)"
+license="All rights reserved"
 issueTrackerURL="https://github.com/gloomybanana/dprm"
 [[mods]]
 modId="dprm"
@@ -9,6 +10,6 @@ displayURL="https://github.com/gloomybanana/dprm"
 logoFile="logo.png"
 authors="gloomybanana"
 description='''
-this is an assistant tool designed for making vanilla datapack recipe.you can generate a vanilla recipe in you game world by drag item into craft table gui.
+An assistant tool designed for making vanilla datapack recipes.you can generate a vanilla recipe in you game world by drag item into craft table gui.
 The .json files are saved in your saves directory
 '''

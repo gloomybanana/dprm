@@ -1,6 +1,7 @@
 package org.gloomybanana.DPRM.Screen;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -41,22 +42,22 @@ public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingCo
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks,mouseX,mouseY);
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack,float partialTicks, int mouseX, int mouseY) {
+        super.drawGuiContainerBackgroundLayer(matrixStack,partialTicks,mouseX,mouseY);
         //切石机
         this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(Items.STONECUTTER),guiLeft+79,guiTop+33);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX,mouseY);
-        String s = this.title.getFormattedText();
-        this.font.drawString(s, (float)(this.xSize / 2 - this.font.getStringWidth(s) / 2), 6.0F, 4210752);
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack,int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(matrixStack,mouseX,mouseY);
+        String s = this.title.getString();
+        this.font.drawString(matrixStack,s, (float)(this.xSize / 2 - this.font.getStringWidth(s) / 2), 6.0F, 4210752);
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float particleTick) {
-        super.render(mouseX, mouseY, particleTick);
+    public void render(MatrixStack matrixStack,int mouseX, int mouseY, float particleTick) {
+        super.render(matrixStack,mouseX, mouseY, particleTick);
 
         if (isRecipeJsonExist){
             renderFakeRecipe();
@@ -75,6 +76,9 @@ public class StonecuttingScreen extends AbstractRecipeMakerScreen<StonecuttingCo
             ItemStack resultItemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(resultRegistryName)),resultcount);
             this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(ingredientItemStack,guiLeft+20,guiTop+33);
             this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(resultItemStack,guiLeft+143,guiTop+33);
+            if (resultcount>1){
+                this.minecraft.getItemRenderer().renderItemOverlayIntoGUI(this.font,resultItemStack,guiLeft+143,guiTop+33,resultcount.toString());
+            }
         }
     }
 

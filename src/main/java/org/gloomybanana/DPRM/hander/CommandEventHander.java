@@ -4,18 +4,17 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import org.gloomybanana.DPRM.Config;
 import org.gloomybanana.DPRM.command.*;
 
 @Mod.EventBusSubscriber
 public class CommandEventHander {
     @SubscribeEvent
-    public static void onServerStarting(FMLServerStartingEvent event){
+    public static void onServerStarting(RegisterCommandsEvent event){
 
-        Boolean onlyOperatorCanUse = Config.VALUE.get();
+        Boolean onlyOperatorCanUse = Config.ONLY_OP_CAN_USE.get();
         Integer permissionLevel = onlyOperatorCanUse?2:0;
 
         //命令节点"dprm"
@@ -26,7 +25,7 @@ public class CommandEventHander {
         LiteralArgumentBuilder<CommandSource> crafting = Commands.literal("crafting");
         crafting.requires((commandSource)-> commandSource.hasPermissionLevel(permissionLevel));
         crafting.executes(CraftingCommand.instance);
-        dprm.then(crafting);//绑定到"dprm"节点上
+        dprm.then(crafting);
         //命令节点"furnace"
         LiteralArgumentBuilder<CommandSource> blasting = Commands.literal("furnace");
         blasting.requires((commandSource -> commandSource.hasPermissionLevel(permissionLevel)));
@@ -38,10 +37,16 @@ public class CommandEventHander {
         stonecutting.executes(StonecuttingCommand.instance);
         dprm.then(stonecutting);
         //命令节点"smithing"
+        LiteralArgumentBuilder<CommandSource> smithing = Commands.literal("smithing");
+        smithing.requires((commandSource -> commandSource.hasPermissionLevel(permissionLevel)));
+        smithing.executes(SmithingCommand.instance);
+        dprm.then(smithing);
         //TODO
 
+
+
         //注册命令
-        CommandDispatcher<CommandSource> commandDispatcher = event.getCommandDispatcher();
+        CommandDispatcher<CommandSource> commandDispatcher = event.getDispatcher();
         commandDispatcher.register(dprm);
     }
 }

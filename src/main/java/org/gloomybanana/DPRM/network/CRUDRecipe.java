@@ -48,13 +48,13 @@ public class CRUDRecipe {
         if (jsonPacket.getString("crud").equals("create")){
             JSONObject result = JsonManager.createJsonFile(jsonPacket,json_recipe,recipe_name);
             if (result.getBoolean("success")){
-                serverPlayer.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_successed",result.getString("dir")));
+                serverPlayer.sendMessage(new TranslationTextComponent("gui."+DPRM.MOD_ID+".chat.recipe_generate_successed",result.getString("dir")),serverPlayer.getUniqueID());
             }
-            else { serverPlayer.sendMessage(new TranslationTextComponent("gui."+ DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir"))); }
+            else { serverPlayer.sendMessage(new TranslationTextComponent("gui."+ DPRM.MOD_ID+".chat.recipe_generate_failed",result.getString("dir")),serverPlayer.getUniqueID()); }
         }
         if (jsonPacket.getString("crud").equals("delete")) {
             String result = JsonManager.deleteJsonFile(jsonPacket);
-            serverPlayer.sendMessage(new StringTextComponent(result));
+            serverPlayer.sendMessage(new StringTextComponent(result),serverPlayer.getUniqueID());
         }
 
         //向玩家反馈创建信息

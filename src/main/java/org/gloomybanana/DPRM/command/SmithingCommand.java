@@ -6,20 +6,20 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.gloomybanana.DPRM.containerprovider.RecipeListContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.CraftingContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.SmithingContainerProvider;
 import org.gloomybanana.DPRM.file.JsonManager;
 
 import java.io.IOException;
 
+public class SmithingCommand implements Command<CommandSource> {
+    public static SmithingCommand instance = new SmithingCommand();
 
-public class RecipeListCommand implements Command<CommandSource> {
-    public static RecipeListCommand instance = new RecipeListCommand();
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         ServerPlayerEntity serverPlayer = context.getSource().asPlayer();
-//        String datapacksDirPath = serverPlayer.getServer().getDataDirectory().getPath() + "\\datapacks";
         String datapacksDirPath = JsonManager.getWorldFolder(serverPlayer.getServerWorld()).getPath() + "\\datapacks";
         JSONObject jsonPacket = new JSONObject(true);
         jsonPacket.put("player_name",serverPlayer.getName().getString());
@@ -32,11 +32,10 @@ public class RecipeListCommand implements Command<CommandSource> {
             e.printStackTrace();
         }
 
-        NetworkHooks.openGui(serverPlayer,new RecipeListContainerProvider(), (PacketBuffer packetBuffer) -> {
+
+        NetworkHooks.openGui(serverPlayer,new SmithingContainerProvider(), (packetBuffer) -> {
             packetBuffer.writeString(jsonPacket.toJSONString());
         });
         return 0;
     }
-
-
 }

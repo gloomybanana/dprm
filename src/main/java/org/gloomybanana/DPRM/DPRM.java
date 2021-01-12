@@ -7,11 +7,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.gloomybanana.DPRM.hander.Config;
 import org.gloomybanana.DPRM.hander.Registry;
 
 @Mod("dprm")
 public class DPRM {
-
     public static final String MOD_ID = "dprm";
     public static final String MOD_NAME = "Datapack Recipe Maker";
     public static final String MOD_VERSION = "1.2";

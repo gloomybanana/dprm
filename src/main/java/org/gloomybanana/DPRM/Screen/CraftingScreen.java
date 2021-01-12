@@ -2,14 +2,15 @@ package org.gloomybanana.DPRM.Screen;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.gloomybanana.DPRM.DPRM;
 import org.gloomybanana.DPRM.container.CraftingContainer;
@@ -18,9 +19,6 @@ import org.gloomybanana.DPRM.network.Networking;
 import org.gloomybanana.DPRM.network.ScreenToggle;
 import org.gloomybanana.DPRM.network.CRUDRecipe;
 import org.gloomybanana.DPRM.widget.ToggleCraftingTypeButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer> {
     //提交按钮判断条件
@@ -51,8 +49,8 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float particleTick) {
-        super.render(mouseX, mouseY, particleTick);
+    public void render(MatrixStack matrixStack,int mouseX, int mouseY, float particleTick) {
+        super.render(matrixStack,mouseX, mouseY, particleTick);
 
 //        try {
 //            String type = currentRecipe.getString("type");
@@ -75,13 +73,11 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
 
     Boolean isToggleCraftingBtnHovered = false;
     @Override
-    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-        super.renderHoveredToolTip(mouseX, mouseY);
+    protected void renderHoveredTooltip(MatrixStack matrixStack,int mouseX, int mouseY) {
+        super.renderHoveredTooltip(matrixStack,mouseX, mouseY);
         //判断是否悬停在切换按钮
-        List<String> toogleCraftType = new ArrayList<>();
-        toogleCraftType.add(I18n.format( "gui."+DPRM.MOD_ID+".toggle_crafting_type"));
         if ((mouseX>=guiLeft+88)&&(mouseX<=guiLeft+116)&&(mouseY>=guiTop+28)&&(mouseY<=guiTop+56)){
-            this.renderTooltip(toogleCraftType,mouseX,mouseY);
+            this.renderTooltip(matrixStack,new TranslationTextComponent("gui."+DPRM.MOD_ID+".toggle_crafting_type"),mouseX,mouseY);
             isToggleCraftingBtnHovered = true;
         }else isToggleCraftingBtnHovered = false;
     }
@@ -111,17 +107,17 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
         this.confirmBtn.active = !isResultSlotEmpty && !isCraftingSlotEmpty && !isRecipeNameEmpty && !isGroupNameEmpty;
     }
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks,mouseX,mouseY);
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack,float partialTicks, int mouseX, int mouseY) {
+        super.drawGuiContainerBackgroundLayer(matrixStack,partialTicks,mouseX,mouseY);
         this.minecraft.getTextureManager().bindTexture(this.SCREEN_TEXTURE);
-        if (isToggleCraftingBtnHovered) blit(guiLeft+88, guiTop+28, 28, 198,28, 28, textureWidth, textureHeight);
-        if (currentType == ToggleCraftingTypeButton.Type.crafting_shaped) blit(guiLeft+88, guiTop+28, 0, 226,28, 28, textureWidth, textureHeight);
-        if (currentType == ToggleCraftingTypeButton.Type.crafting_shapeless) blit(guiLeft+88, guiTop+28, 0, 198,28, 28, textureWidth, textureHeight);
+        if (isToggleCraftingBtnHovered) blit(matrixStack,guiLeft+88, guiTop+28, 28, 198,28, 28, textureWidth, textureHeight);
+        if (currentType == ToggleCraftingTypeButton.Type.crafting_shaped) blit(matrixStack,guiLeft+88, guiTop+28, 0, 226,28, 28, textureWidth, textureHeight);
+        if (currentType == ToggleCraftingTypeButton.Type.crafting_shapeless) blit(matrixStack,guiLeft+88, guiTop+28, 0, 198,28, 28, textureWidth, textureHeight);
     }
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX,mouseY);
-        this.font.drawString(currentType.getTitle(), 28.0F, 6.0F, 4210752);
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack,int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(matrixStack,mouseX,mouseY);
+        this.font.drawString(matrixStack,currentType.getTitle(), 28.0F, 6.0F, 4210752);
     }
     @Override
     public void removed() {
@@ -147,11 +143,11 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
                 String itemRegistryName = (key.getJSONObject(i + "") == null) ? "minecraft:air" : key.getJSONObject(i + "").getString("item");
                 fakeItemStacks[i] = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRegistryName)));
             }
+            Integer resultItemCount = 1;
             if (currentRecipe.getJSONObject("result")!=null){
                 JSONObject result = currentRecipe.getJSONObject("result");
                 if (result.getString("item")!=null){
                     String resultItemRegisryName = result.getString("item");
-                    Integer resultItemCount = 0;
                     if (result.getInteger("count")!=null){
                         resultItemCount = result.getInteger("count");
                     }
@@ -159,6 +155,8 @@ public class CraftingScreen extends AbstractRecipeMakerScreen<CraftingContainer>
                 }
             }
             this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(fakeItemStacks[0],guiLeft+124,guiTop+35);
+            this.minecraft.getItemRenderer().renderItemOverlayIntoGUI(this.font,fakeItemStacks[0],guiLeft+124,guiTop+35,resultItemCount.toString());
+
             this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(fakeItemStacks[1],guiLeft+30 + 0 * 18,guiTop+17 + 0 * 18);
             this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(fakeItemStacks[2],guiLeft+30 + 1 * 18,guiTop+17 + 0 * 18);
             this.minecraft.getItemRenderer().renderItemAndEffectIntoGUI(fakeItemStacks[3],guiLeft+30 + 2 * 18,guiTop+17 + 0 * 18);

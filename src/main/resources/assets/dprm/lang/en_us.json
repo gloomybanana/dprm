@@ -6,6 +6,7 @@
   "gui.dprm.smelting.title": "Smelting",
   "gui.dprm.smoking.title": "Smoking",
   "gui.dprm.stonecutting.title": "Stonecutting",
+  "gui.dprm.smithing.title": "Smithing",
   "gui.dprm.recipe_info.recipe_name": "recipe name",
   "gui.dprm.recipe_info.group_name": "group",
   "gui.dprm.recipe_info.add_recipe": "add recipe",
@@ -26,9 +27,11 @@
   "gui.dprm.add_crafting_recipe": "add crafting recipe",
   "gui.dprm.add_furnace_recipe": "add furnace recipe",
   "gui.dprm.add_stonecutting_recipe": "add stonecutting recipe",
+  "gui.dprm.add_smithing_recipe": "add smithing recipe",
   "gui.dprm.this_is_a_crafting_recipe": "this is a crafting recipe",
   "gui.dprm.this_is_a_furnace_recipe": "this is a furnace recipe",
   "gui.dprm.this_is_a_stonecutting_recipe": "this is a stonecutting recipe",
+  "gui.dprm.this_is_a_smithing_recipe": "this is a smithing recipe",
 
   "gui.dprm.type.crafting_shaped": "crafting shaped",
   "gui.dprm.type.crafting_shapeless": "crafting shapeless",
@@ -37,6 +40,7 @@
   "gui.dprm.type.blasting": "blasting",
   "gui.dprm.type.campfire_cooking": "campfire_cooking",
   "gui.dprm.type.stonecutting": "stonecutting",
+  "gui.dprm.type.smithing": "smithing",
 
   "gui.dprm.tooltips.recipe_name": "name: %s",
   "gui.dprm.tooltips.recipe_type": "type: %s",

@@ -12,10 +12,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.gloomybanana.DPRM.DPRM;
-import org.gloomybanana.DPRM.containerprovider.CraftingContainerProvider;
-import org.gloomybanana.DPRM.containerprovider.FurnaceContainerProvider;
-import org.gloomybanana.DPRM.containerprovider.RecipeListContainerProvider;
-import org.gloomybanana.DPRM.containerprovider.StonecuttingContainerProvider;
+import org.gloomybanana.DPRM.containerprovider.*;
 import org.gloomybanana.DPRM.file.JsonManager;
 
 import java.io.IOException;
@@ -72,6 +69,11 @@ public class ScreenToggle {
         }
         if (jsonPacket.getString("operate").equals("open_stonecutting_screen")){
             NetworkHooks.openGui(serverPlayer,new StonecuttingContainerProvider(), (PacketBuffer packetBuffer) -> {
+                packetBuffer.writeString(jsonPacket.toJSONString());
+            });
+        }
+        if (jsonPacket.getString("operate").equals("open_smithing_screen")){
+            NetworkHooks.openGui(serverPlayer,new SmithingContainerProvider(), (PacketBuffer packetBuffer) -> {
                 packetBuffer.writeString(jsonPacket.toJSONString());
             });
         }
